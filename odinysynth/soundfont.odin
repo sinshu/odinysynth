@@ -61,6 +61,7 @@ destroy_soundfont :: proc(soundfont: Soundfont) {
     delete(soundfont.wave_data)
 }
 
+@(private)
 skip_soundfont_info :: proc(r: io.Reader) -> Error {
     err: Error = nil
 
