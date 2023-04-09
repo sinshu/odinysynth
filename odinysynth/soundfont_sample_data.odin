@@ -3,13 +3,13 @@ package odinysynth
 import "core:io"
 import "core:mem"
 
-SoundfontSampleData :: struct {
+Soundfont_Sample_Data :: struct {
     bits_per_sample: i32
     samples: [dynamic]i16
 }
 
-new_soundfont_sample_data :: proc(r: io.Reader) -> (SoundfontSampleData, Error) {
-    result: SoundfontSampleData = {}
+new_soundfont_sample_data :: proc(r: io.Reader) -> (Soundfont_Sample_Data, Error) {
+    result: Soundfont_Sample_Data = {}
     n: int = 0
     err: Error = nil
 

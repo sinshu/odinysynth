@@ -42,7 +42,7 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
         return {}, err
     }
 
-    sample_data: SoundfontSampleData
+    sample_data: Soundfont_Sample_Data
     sample_data, err = new_soundfont_sample_data(r)
     sum: int = 0
     for value in sample_data.samples {
