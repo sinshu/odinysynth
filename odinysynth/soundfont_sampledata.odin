@@ -9,7 +9,7 @@ SoundFontSampleData :: struct {
 }
 
 new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Error) {
-    result := SoundFontSampleData {}
+    result: SoundFontSampleData = {}
     n: int = 0
     err: io.Error = nil
 
@@ -24,10 +24,11 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
     chunk_id: [4]u8
     chunk_id, err = read_four_cc(r)
     if err != nil {
-        return result, err
+        return {}, err
     }
     if chunk_id != "LIST" {
-        return result, io.Error.Unknown
+        err = io.Error.Unknown
+        return {}, err
     }
 
     pos: i32 = 0
@@ -35,16 +36,17 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
     end: i32
     end, err = read_i32(r)
     if err != nil {
-        return result, err
+        return {}, err
     }
 
     list_type: [4] u8
     list_type, err = read_four_cc(r)
     if err != nil {
-        return result, err
+        return {}, err
     }
     if list_type != "sdta" {
-        return result, io.Error.Unknown
+        err = io.Error.Unknown
+        return {}, err
     }
     pos += 4
 
@@ -52,14 +54,14 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
         id: [4]u8
         id, err = read_four_cc(r)
         if err != nil {
-            return result, err
+            return {}, err
         }
         pos += 4
 
         size: i32
         size, err = read_i32(r)
         if err != nil {
-            return result, err
+            return {}, err
         }
         pos += 4
 
@@ -72,17 +74,18 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
             // 24 bit audio is not supported.
             err = discard_data(r, int(size))
         case:
-            return result, io.Error.Unknown
+            err = io.Error.Unknown
         }
         if err != nil {
-            return result, err
+            return {}, err
         }
 
         pos += size
     }
 
     if result.samples == nil {
-        return result, io.Error.Unknown
+        err = io.Error.Unknown
+        return {}, err
     }
 
     return result, nil

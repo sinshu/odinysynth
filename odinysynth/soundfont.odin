@@ -8,36 +8,38 @@ SoundFont :: struct {
 }
 
 new_sound_font :: proc(r: io.Reader) -> (SoundFont, io.Error) {
-    result := SoundFont {}
+    result: SoundFont = {}
     err: io.Error = nil
 
     chunk_id: [4]u8
     chunk_id, err = read_four_cc(r)
     if err != nil {
-        return result, err
+        return {}, err
     }
     if chunk_id != "RIFF" {
-        return result, io.Error.Unknown
+        err = io.Error.Unknown
+        return {}, err
     }
 
     size: i32
     size, err = read_i32(r)
     if err != nil {
-        return result, err
+        return {}, err
     }
 
     form_type: [4]u8
     form_type, err = read_four_cc(r)
     if err != nil {
-        return result, err
+        return {}, err
     }
     if form_type != "sfbk" {
-        return result, io.Error.Unknown
+        err = io.Error.Unknown
+        return {}, err
     }
 
     err = skip_sound_font_info(r)
     if err != nil {
-        return result, err
+        return {}, err
     }
 
     sample_data: SoundFontSampleData
@@ -62,7 +64,8 @@ skip_sound_font_info :: proc(r: io.Reader) -> io.Error {
         return err
     }
     if chunk_id != "LIST" {
-        return io.Error.Unknown
+        err = io.Error.Unknown
+        return err
     }
 
     size: i32
