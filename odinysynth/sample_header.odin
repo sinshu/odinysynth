@@ -84,7 +84,7 @@ read_sample_headers_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Sam
     }
 
     count := size / 46 - 1
-	result = make([dynamic]Sample_Header, count)
+    result = make([dynamic]Sample_Header, count)
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_sample_header(r)
@@ -94,10 +94,10 @@ read_sample_headers_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Sam
     }
 
     // The last one is the terminator.
-	err = discard_data(r, 46)
-	if err != nil {
-		return nil, err
-	}
+    err = discard_data(r, 46)
+    if err != nil {
+        return nil, err
+    }
 
-	return result, nil
+    return result, nil
 }
