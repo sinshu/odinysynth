@@ -58,9 +58,7 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
 }
 
 destroy_soundfont :: proc(soundfont: Soundfont) {
-    if soundfont.wave_data != nil {
-        delete(soundfont.wave_data)
-    }
+    delete(soundfont.wave_data)
 }
 
 skip_soundfont_info :: proc(r: io.Reader) -> Error {
