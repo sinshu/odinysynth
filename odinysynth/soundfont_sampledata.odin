@@ -8,10 +8,10 @@ SoundFontSampleData :: struct {
     samples: [dynamic]i16
 }
 
-new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Error) {
+new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, Error) {
     result: SoundFontSampleData = {}
     n: int = 0
-    err: io.Error = nil
+    err: Error = nil
 
     defer {
         if err != nil {
@@ -27,7 +27,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
         return {}, err
     }
     if chunk_id != "LIST" {
-        err = io.Error.Unknown
+        err = OdinySynth_Error.Invalid_SoundFont
         return {}, err
     }
 
@@ -45,7 +45,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
         return {}, err
     }
     if list_type != "sdta" {
-        err = io.Error.Unknown
+        err = OdinySynth_Error.Invalid_SoundFont
         return {}, err
     }
     pos += 4
@@ -74,7 +74,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
             // 24 bit audio is not supported.
             err = discard_data(r, int(size))
         case:
-            err = io.Error.Unknown
+            err = OdinySynth_Error.Invalid_SoundFont
         }
         if err != nil {
             return {}, err
@@ -84,7 +84,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
     }
 
     if result.samples == nil {
-        err = io.Error.Unknown
+        err = OdinySynth_Error.Invalid_SoundFont
         return {}, err
     }
 

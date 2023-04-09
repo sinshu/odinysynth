@@ -7,9 +7,9 @@ SoundFont :: struct {
     wave_data: [dynamic]i16
 }
 
-new_sound_font :: proc(r: io.Reader) -> (SoundFont, io.Error) {
+new_sound_font :: proc(r: io.Reader) -> (SoundFont, Error) {
     result: SoundFont = {}
-    err: io.Error = nil
+    err: Error = nil
 
     chunk_id: [4]u8
     chunk_id, err = read_four_cc(r)
@@ -17,7 +17,7 @@ new_sound_font :: proc(r: io.Reader) -> (SoundFont, io.Error) {
         return {}, err
     }
     if chunk_id != "RIFF" {
-        err = io.Error.Unknown
+        err = OdinySynth_Error.Invalid_SoundFont
         return {}, err
     }
 
@@ -33,7 +33,7 @@ new_sound_font :: proc(r: io.Reader) -> (SoundFont, io.Error) {
         return {}, err
     }
     if form_type != "sfbk" {
-        err = io.Error.Unknown
+        err = OdinySynth_Error.Invalid_SoundFont
         return {}, err
     }
 
@@ -55,8 +55,8 @@ new_sound_font :: proc(r: io.Reader) -> (SoundFont, io.Error) {
     return result, nil
 }
 
-skip_sound_font_info :: proc(r: io.Reader) -> io.Error {
-    err: io.Error = nil
+skip_sound_font_info :: proc(r: io.Reader) -> Error {
+    err: Error = nil
 
     chunk_id: [4]u8
     chunk_id, err = read_four_cc(r)
@@ -64,7 +64,7 @@ skip_sound_font_info :: proc(r: io.Reader) -> io.Error {
         return err
     }
     if chunk_id != "LIST" {
-        err = io.Error.Unknown
+        err = OdinySynth_Error.Invalid_SoundFont
         return err
     }
 
