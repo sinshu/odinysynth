@@ -5,6 +5,7 @@ import "core:io"
 
 Soundfont :: struct {
     wave_data: [dynamic]i16
+    sample_headers: [dynamic]Sample_Header
 }
 
 new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
@@ -44,21 +45,28 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
 
     sample_data: Soundfont_Sample_Data
     sample_data, err = new_soundfont_sample_data(r)
+    result.wave_data = sample_data.samples
+
+    parameters: Soundfont_Parameters
+    parameters, err = new_soundfont_parameters(r)
+    result.sample_headers = parameters.sample_headers
+
     sum: int = 0
     for value in sample_data.samples {
         sum += int(value)
     }
-
     fmt.println(size)
     fmt.println(sum)
-
-    result.wave_data = sample_data.samples
+    for h in parameters.sample_headers {
+        fmt.printf("%s\n", h.name)
+    }
 
     return result, nil
 }
 
 destroy_soundfont :: proc(soundfont: Soundfont) {
     delete(soundfont.wave_data)
+    delete(soundfont.sample_headers)
 }
 
 @(private)
