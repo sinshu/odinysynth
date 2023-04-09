@@ -10,10 +10,8 @@ Soundfont_Parameters :: struct {
 
 @(private)
 new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) {
-    result: Soundfont_Parameters = {}
-    err: Error = nil
-
     sample_headers: [dynamic]Sample_Header = nil
+    err: Error = nil
 
     defer {
 
@@ -86,6 +84,7 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
         return {}, Odinysynth_Error.Invalid_Soundfont
     }
 
+    result := Soundfont_Parameters {}
     result.sample_headers = sample_headers
 
     return result, nil

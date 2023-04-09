@@ -9,8 +9,20 @@ Soundfont :: struct {
 }
 
 new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
-    result: Soundfont = {}
+    wave_data: [dynamic]i16 = nil
+    sample_headers: [dynamic]Sample_Header = nil
     err: Error = nil
+
+    defer {
+        if err != nil {
+            if wave_data != nil {
+                delete(wave_data)
+            }
+            if sample_headers != nil {
+                delete(sample_headers)
+            }
+        }
+    }
 
     chunk_id: [4]u8
     chunk_id, err = read_four_cc(r)
@@ -45,11 +57,11 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
 
     sample_data: Soundfont_Sample_Data
     sample_data, err = new_soundfont_sample_data(r)
-    result.wave_data = sample_data.samples
+    wave_data = sample_data.samples
 
     parameters: Soundfont_Parameters
     parameters, err = new_soundfont_parameters(r)
-    result.sample_headers = parameters.sample_headers
+    sample_headers = parameters.sample_headers
 
     sum: int = 0
     for value in sample_data.samples {
@@ -61,6 +73,9 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
         fmt.printf("%s\n", h.name)
     }
 
+    result: Soundfont = {}
+    result.wave_data = wave_data
+    result.sample_headers = sample_headers
     return result, nil
 }
 

@@ -79,8 +79,17 @@ read_sample_headers_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Sam
     result: [dynamic]Sample_Header = nil
     err: Error = nil
 
+    defer {
+        if err != nil {
+            if result != nil {
+                delete(result)
+            }
+        }
+    }
+
     if size % 46 != 0 {
-        return nil, Odinysynth_Error.Invalid_Soundfont
+        err = Odinysynth_Error.Invalid_Soundfont
+        return nil, err
     }
 
     count := size / 46 - 1
