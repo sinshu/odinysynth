@@ -3,13 +3,13 @@ package odinysynth
 import "core:io"
 import "core:mem"
 
-SoundFontSampleData :: struct {
+SoundfontSampleData :: struct {
     bits_per_sample: i32
     samples: [dynamic]i16
 }
 
-new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, Error) {
-    result: SoundFontSampleData = {}
+new_soundfont_sample_data :: proc(r: io.Reader) -> (SoundfontSampleData, Error) {
+    result: SoundfontSampleData = {}
     n: int = 0
     err: Error = nil
 
@@ -27,7 +27,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, Error)
         return {}, err
     }
     if chunk_id != "LIST" {
-        err = OdinySynth_Error.Invalid_SoundFont
+        err = Odinysynth_Error.Invalid_Soundfont
         return {}, err
     }
 
@@ -45,7 +45,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, Error)
         return {}, err
     }
     if list_type != "sdta" {
-        err = OdinySynth_Error.Invalid_SoundFont
+        err = Odinysynth_Error.Invalid_Soundfont
         return {}, err
     }
     pos += 4
@@ -74,7 +74,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, Error)
             // 24 bit audio is not supported.
             err = discard_data(r, int(size))
         case:
-            err = OdinySynth_Error.Invalid_SoundFont
+            err = Odinysynth_Error.Invalid_Soundfont
         }
         if err != nil {
             return {}, err
@@ -84,7 +84,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, Error)
     }
 
     if result.samples == nil {
-        err = OdinySynth_Error.Invalid_SoundFont
+        err = Odinysynth_Error.Invalid_Soundfont
         return {}, err
     }
 

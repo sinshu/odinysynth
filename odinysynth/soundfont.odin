@@ -3,12 +3,12 @@ package odinysynth
 import "core:fmt"
 import "core:io"
 
-SoundFont :: struct {
+Soundfont :: struct {
     wave_data: [dynamic]i16
 }
 
-new_sound_font :: proc(r: io.Reader) -> (SoundFont, Error) {
-    result: SoundFont = {}
+new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
+    result: Soundfont = {}
     err: Error = nil
 
     chunk_id: [4]u8
@@ -17,7 +17,7 @@ new_sound_font :: proc(r: io.Reader) -> (SoundFont, Error) {
         return {}, err
     }
     if chunk_id != "RIFF" {
-        err = OdinySynth_Error.Invalid_SoundFont
+        err = Odinysynth_Error.Invalid_Soundfont
         return {}, err
     }
 
@@ -33,17 +33,17 @@ new_sound_font :: proc(r: io.Reader) -> (SoundFont, Error) {
         return {}, err
     }
     if form_type != "sfbk" {
-        err = OdinySynth_Error.Invalid_SoundFont
+        err = Odinysynth_Error.Invalid_Soundfont
         return {}, err
     }
 
-    err = skip_sound_font_info(r)
+    err = skip_soundfont_info(r)
     if err != nil {
         return {}, err
     }
 
-    sample_data: SoundFontSampleData
-    sample_data, err = new_sound_font_sample_data(r)
+    sample_data: SoundfontSampleData
+    sample_data, err = new_soundfont_sample_data(r)
     sum: int = 0
     for value in sample_data.samples {
         sum += int(value)
@@ -52,10 +52,18 @@ new_sound_font :: proc(r: io.Reader) -> (SoundFont, Error) {
     fmt.println(size)
     fmt.println(sum)
 
+    result.wave_data = sample_data.samples
+
     return result, nil
 }
 
-skip_sound_font_info :: proc(r: io.Reader) -> Error {
+destroy_soundfont :: proc(soundfont: Soundfont) {
+    if soundfont.wave_data != nil {
+        delete(soundfont.wave_data)
+    }
+}
+
+skip_soundfont_info :: proc(r: io.Reader) -> Error {
     err: Error = nil
 
     chunk_id: [4]u8
@@ -64,7 +72,7 @@ skip_sound_font_info :: proc(r: io.Reader) -> Error {
         return err
     }
     if chunk_id != "LIST" {
-        err = OdinySynth_Error.Invalid_SoundFont
+        err = Odinysynth_Error.Invalid_Soundfont
         return err
     }
 
