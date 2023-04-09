@@ -39,7 +39,7 @@ new_sound_font_sample_data :: proc(r: io.Reader) -> (SoundFontSampleData, io.Err
         return {}, err
     }
 
-    list_type: [4] u8
+    list_type: [4]u8
     list_type, err = read_four_cc(r)
     if err != nil {
         return {}, err
