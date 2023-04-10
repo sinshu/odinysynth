@@ -2,6 +2,7 @@ package odinysynth
 
 import "core:io"
 
+@(private)
 Zone_Info :: struct {
     generator_index: u16,
     modulator_index: u16,

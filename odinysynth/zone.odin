@@ -1,12 +1,17 @@
 package odinysynth
 
+@(private)
 Zone :: struct {
     generators: []Generator,
 }
 
+@(private)
 empty_generators: [0]Generator = {}
+
+@(private)
 empty_zone: Zone = { generators = empty_generators[:] }
 
+@(private)
 new_zone :: proc(info: ^Zone_Info, generators: []Generator) -> Zone {
     start := int(info.generator_index)
     end := start + int(info.generator_count)
@@ -17,6 +22,7 @@ new_zone :: proc(info: ^Zone_Info, generators: []Generator) -> Zone {
     }
 }
 
+@(private)
 create_zones :: proc(infos: []Zone_Info, generators: []Generator) -> ([]Zone, Error) {
     result: []Zone = nil
     err: Error = nil

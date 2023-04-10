@@ -7,6 +7,7 @@ Instrument_Region :: struct {
     gs: [Generator_Type.Count]i16,
 }
 
+@(private)
 instrument_region_contains_global_zone :: proc(zones: []Zone) -> bool {
     if len(zones[0].generators) == 0 {
         return true
@@ -19,6 +20,7 @@ instrument_region_contains_global_zone :: proc(zones: []Zone) -> bool {
     return false
 }
 
+@(private)
 instrument_region_count_regions :: proc(infos: []Instrument_Info, all_zones: []Zone) -> int {
     // The last one is the terminator.
     instrument_count := len(infos) - 1
@@ -42,6 +44,7 @@ instrument_region_count_regions :: proc(infos: []Instrument_Info, all_zones: []Z
     return sum
 }
 
+@(private)
 instrument_region_set_parameter :: proc(gs: ^[Generator_Type.Count]i16, generator: Generator) {
     index := int(generator.generator_type)
 
@@ -51,6 +54,7 @@ instrument_region_set_parameter :: proc(gs: ^[Generator_Type.Count]i16, generato
     }
 }
 
+@(private)
 new_instrument_region :: proc(global: ^Zone, local: ^Zone, samples: []Sample_Header) -> (Instrument_Region, Error) {
     err: Error = nil
 
@@ -96,6 +100,7 @@ new_instrument_region :: proc(global: ^Zone, local: ^Zone, samples: []Sample_Hea
     return result, nil
 }
 
+@(private)
 create_instrument_regions :: proc(infos: []Instrument_Info, all_zones: []Zone, samples: []Sample_Header) -> ([]Instrument_Region, Error) {
     result: []Instrument_Region = nil
     err: Error = nil

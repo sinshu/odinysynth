@@ -2,6 +2,7 @@ package odinysynth
 
 import "core:io"
 
+@(private)
 Preset_Info :: struct {
     name: [20]u8,
     patch_number: u16,

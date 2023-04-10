@@ -2,6 +2,7 @@ package odinysynth
 
 import "core:io"
 
+@(private)
 Instrument_Info :: struct {
     name: [20]u8,
     zone_start_index: u16,

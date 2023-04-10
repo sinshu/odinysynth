@@ -1,5 +1,6 @@
 package odinysynth
 
+@(private)
 Generator_Type :: enum {
     Start_Address_Offset = 0,
     End_Address_Offset = 1,

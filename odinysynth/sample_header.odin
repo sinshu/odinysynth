@@ -102,7 +102,7 @@ read_sample_headers_from_chunk :: proc(r: io.Reader, size: int) -> ([]Sample_Hea
     }
 
     // The last one is the terminator.
-    terminator: Sample_Header = {}
+    terminator: Sample_Header
     terminator, err = new_sample_header(r)
     if err != nil {
         return nil, err

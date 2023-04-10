@@ -7,6 +7,7 @@ Instrument :: struct {
     regions: []Instrument_Region,
 }
 
+@(private)
 new_instrument :: proc(name: [20]u8, regions: []Instrument_Region) -> Instrument {
     result: Instrument = {}
     result.name = name
@@ -14,6 +15,7 @@ new_instrument :: proc(name: [20]u8, regions: []Instrument_Region) -> Instrument
     return result
 }
 
+@(private)
 create_instruments :: proc(infos: []Instrument_Info, all_zones: []Zone, all_regions: []Instrument_Region) -> ([]Instrument, Error) {
     result: []Instrument = nil
     err: Error = nil

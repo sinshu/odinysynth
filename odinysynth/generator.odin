@@ -2,6 +2,7 @@ package odinysynth
 
 import "core:io"
 
+@(private)
 Generator :: struct {
     generator_type: u16,
     value: i16,
@@ -54,7 +55,7 @@ read_generators_from_chunk :: proc(r: io.Reader, size: int) -> ([]Generator, Err
     }
 
     // The last one is the terminator.
-    terminator: Generator = {}
+    terminator: Generator
     terminator, err = new_generator(r)
     if err != nil {
         return nil, err
