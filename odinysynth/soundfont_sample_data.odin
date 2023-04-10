@@ -12,7 +12,6 @@ Soundfont_Sample_Data :: struct {
 @(private)
 new_soundfont_sample_data :: proc(r: io.Reader) -> (Soundfont_Sample_Data, Error) {
     result: Soundfont_Sample_Data = {}
-    n: int = 0
     err: Error = nil
 
     defer {
@@ -71,6 +70,7 @@ new_soundfont_sample_data :: proc(r: io.Reader) -> (Soundfont_Sample_Data, Error
         case "smpl":
             result.bits_per_sample = 16
             result.samples = make([]i16, size / 2)
+            n: int
             n, err = io.read_full(r, mem.slice_data_cast([]u8, result.samples[:]))
         case "sm24":
             // 24 bit audio is not supported.
