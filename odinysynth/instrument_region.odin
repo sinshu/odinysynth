@@ -149,3 +149,203 @@ create_instrument_regions :: proc(infos: []Instrument_Info, all_zones: []Zone, s
 
     return result, nil
 }
+
+instrument_get_sample_start :: proc(ir: ^Instrument_Region) -> i32 {
+    return ir.sample.start + instrument_get_start_address_offset(ir)
+}
+
+instrument_get_sample_end :: proc(ir: ^Instrument_Region) -> i32 {
+    return ir.sample.end + instrument_get_end_address_offset(ir)
+}
+
+instrument_get_sample_start_loop :: proc(ir: ^Instrument_Region) -> i32 {
+    return ir.sample.start_loop + instrument_get_start_loop_address_offset(ir)
+}
+
+instrument_get_sample_end_loop :: proc(ir: ^Instrument_Region) -> i32 {
+    return ir.sample.end_loop + instrument_get_end_loop_address_offset(ir)
+}
+
+instrument_get_start_address_offset :: proc(ir: ^Instrument_Region) -> i32 {
+    return 32768 * i32(ir.gs[Generator_Type.Start_Address_Coarse_Offset]) + i32(ir.gs[Generator_Type.Start_Address_Offset])
+}
+
+instrument_get_end_address_offset :: proc(ir: ^Instrument_Region) -> i32 {
+    return 32768 * i32(ir.gs[Generator_Type.End_Address_Coarse_Offset]) + i32(ir.gs[Generator_Type.End_Address_Offset])
+}
+
+instrument_get_start_loop_address_offset :: proc(ir: ^Instrument_Region) -> i32 {
+    return 32768 * i32(ir.gs[Generator_Type.Start_Loop_Address_Coarse_Offset]) + i32(ir.gs[Generator_Type.Start_Loop_Address_Offset])
+}
+
+instrument_get_end_loop_address_offset :: proc(ir: ^Instrument_Region) -> i32 {
+    return 32768 * i32(ir.gs[Generator_Type.End_Loop_Address_Coarse_Offset]) + i32(ir.gs[Generator_Type.End_Loop_Address_Offset])
+}
+
+instrument_get_modulation_lfo_to_pitch :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Modulation_Lfo_To_Pitch])
+}
+
+instrument_get_vibrato_lfo_to_pitch :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Vibrato_Lfo_To_Pitch])
+}
+
+instrument_get_modulation_envelope_to_pitch :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Modulation_Envelope_To_Pitch])
+}
+
+instrument_get_initial_filter_cutoff_frequency :: proc(ir: ^Instrument_Region) -> f32 {
+    return cents_to_hertz(f32(ir.gs[Generator_Type.Initial_Filter_Cutoff_Frequency]))
+}
+
+instrument_get_initial_filter_q :: proc(ir: ^Instrument_Region) -> f32 {
+    return f32(0.1) * f32(ir.gs[Generator_Type.Initial_Filter_Q])
+}
+
+instrument_get_modulation_lfo_to_filter_cutoff_frequency :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Modulation_Lfo_To_Filter_Cutoff_Frequency])
+}
+
+instrument_get_modulation_envelope_to_filter_cutoff_frequency :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Modulation_Envelope_To_Filter_Cutoff_Frequency])
+}
+
+instrument_get_modulation_lfo_to_volume :: proc(ir: ^Instrument_Region) -> f32 {
+    return f32(0.1) * f32(ir.gs[Generator_Type.Modulation_Lfo_To_Volume])
+}
+
+instrument_get_chorus_effects_send :: proc(ir: ^Instrument_Region) -> f32 {
+    return f32(0.1) * f32(ir.gs[Generator_Type.Chorus_Effects_Send])
+}
+
+instrument_get_reverb_effects_send :: proc(ir: ^Instrument_Region) -> f32 {
+    return f32(0.1) * f32(ir.gs[Generator_Type.Reverb_Effects_Send])
+}
+
+instrument_get_pan :: proc(ir: ^Instrument_Region) -> f32 {
+    return f32(0.1) * f32(ir.gs[Generator_Type.Pan])
+}
+
+instrument_get_delay_modulation_lfo :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Delay_Modulation_Lfo]))
+}
+
+instrument_get_frequency_modulation_lfo :: proc(ir: ^Instrument_Region) -> f32 {
+    return cents_to_hertz(f32(ir.gs[Generator_Type.Frequency_Modulation_Lfo]))
+}
+
+instrument_get_delay_vibrato_lfo :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Delay_Vibrato_Lfo]))
+}
+
+instrument_get_frequency_vibrato_lfo :: proc(ir: ^Instrument_Region) -> f32 {
+    return cents_to_hertz(f32(ir.gs[Generator_Type.Frequency_Vibrato_Lfo]))
+}
+
+instrument_get_delay_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Delay_Modulation_Envelope]))
+}
+
+instrument_get_attack_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Attack_Modulation_Envelope]))
+}
+
+instrument_get_hold_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Hold_Modulation_Envelope]))
+}
+
+instrument_get_decay_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Decay_Modulation_Envelope]))
+}
+
+instrument_get_sustain_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return f32(0.1) * f32(ir.gs[Generator_Type.Sustain_Modulation_Envelope])
+}
+
+instrument_get_release_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Release_Modulation_Envelope]))
+}
+
+instrument_get_key_number_to_modulation_envelope_hold :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Key_Number_To_Modulation_Envelope_Hold])
+}
+
+instrument_get_key_number_to_modulation_envelope_decay :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Key_Number_To_Modulation_Envelope_Decay])
+}
+
+instrument_get_delay_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Delay_Volume_Envelope]))
+}
+
+instrument_get_attack_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Attack_Volume_Envelope]))
+}
+
+instrument_get_hold_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Hold_Volume_Envelope]))
+}
+
+instrument_get_decay_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Decay_Volume_Envelope]))
+}
+
+instrument_get_sustain_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return f32(0.1) * f32(ir.gs[Generator_Type.Sustain_Volume_Envelope])
+}
+
+instrument_get_release_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
+    return timecents_to_seconds(f32(ir.gs[Generator_Type.Release_Volume_Envelope]))
+}
+
+instrument_get_key_number_to_volume_envelope_hold :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Key_Number_To_Volume_Envelope_Hold])
+}
+
+instrument_get_key_number_to_volume_envelope_decay :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Key_Number_To_Volume_Envelope_Decay])
+}
+
+instrument_get_key_range_start :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Key_Range]) & 0xFF
+}
+
+instrument_get_key_range_end :: proc(ir: ^Instrument_Region) -> i32 {
+    return (i32(ir.gs[Generator_Type.Key_Range]) >> 8) & 0xFF
+}
+
+instrument_get_velocity_range_start :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Velocity_Range]) & 0xFF
+}
+
+instrument_get_velocity_range_end :: proc(ir: ^Instrument_Region) -> i32 {
+    return (i32(ir.gs[Generator_Type.Velocity_Range]) >> 8) & 0xFF
+}
+
+instrument_get_initial_attenuation :: proc(ir: ^Instrument_Region) -> f32 {
+    return f32(0.1) * f32(ir.gs[Generator_Type.Initial_Attenuation])
+}
+
+instrument_get_coarse_tune :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Coarse_Tune])
+}
+
+instrument_get_fine_tune :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Fine_Tune]) + i32(ir.sample.pitch_correction)
+}
+
+instrument_get_sample_modes :: proc(ir: ^Instrument_Region) -> i32 {
+    return ir.gs[Generator_Type.Sample_Modes] != 2 ? i32(ir.gs[Generator_Type.Sample_Modes]) : i32(Loop_Mode.No_Loop)
+}
+
+instrument_get_scale_tuning :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Scale_Tuning])
+}
+
+instrument_get_exclusive_class :: proc(ir: ^Instrument_Region) -> i32 {
+    return i32(ir.gs[Generator_Type.Exclusive_Class])
+}
+
+instrument_get_root_key :: proc(ir: ^Instrument_Region) -> i32 {
+    return ir.gs[Generator_Type.Overriding_Root_Key] != -1 ? i32(ir.gs[Generator_Type.Overriding_Root_Key]) : i32(ir.sample.original_pitch)
+}
