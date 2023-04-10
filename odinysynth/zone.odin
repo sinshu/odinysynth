@@ -17,8 +17,8 @@ new_zone :: proc(info: ^Zone_Info, generators: []Generator) -> Zone {
     }
 }
 
-create_zones :: proc(infos: []Zone_Info, generators: []Generator) -> ([dynamic]Zone, Error) {
-    result: [dynamic]Zone = nil
+create_zones :: proc(infos: []Zone_Info, generators: []Generator) -> ([]Zone, Error) {
+    result: []Zone = nil
     err: Error = nil
 
     defer {
@@ -37,7 +37,7 @@ create_zones :: proc(infos: []Zone_Info, generators: []Generator) -> ([dynamic]Z
     // The last one is the terminator.
     count := len(infos) - 1
 
-    result = make([dynamic]Zone, count)
+    result = make([]Zone, count)
 
     for i := 0; i < count; i += 1 {
         result[i] = new_zone(&infos[i], generators)

@@ -26,8 +26,8 @@ new_generator :: proc(r: io.Reader) -> (Generator, Error) {
 }
 
 @(private)
-read_generators_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Generator, Error) {
-    result: [dynamic]Generator = nil
+read_generators_from_chunk :: proc(r: io.Reader, size: int) -> ([]Generator, Error) {
+    result: []Generator = nil
     err: Error = nil
 
     defer {
@@ -44,7 +44,7 @@ read_generators_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Generat
     }
 
     count := size / 4 - 1
-    result = make([dynamic]Generator, count)
+    result = make([]Generator, count)
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_generator(r)

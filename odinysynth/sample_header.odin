@@ -74,8 +74,8 @@ new_sample_header :: proc(r: io.Reader) -> (Sample_Header, Error) {
 }
 
 @(private)
-read_sample_headers_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Sample_Header, Error) {
-    result: [dynamic]Sample_Header = nil
+read_sample_headers_from_chunk :: proc(r: io.Reader, size: int) -> ([]Sample_Header, Error) {
+    result: []Sample_Header = nil
     err: Error = nil
 
     defer {
@@ -92,7 +92,7 @@ read_sample_headers_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Sam
     }
 
     count := size / 46 - 1
-    result = make([dynamic]Sample_Header, count)
+    result = make([]Sample_Header, count)
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_sample_header(r)

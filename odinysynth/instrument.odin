@@ -14,8 +14,8 @@ new_instrument :: proc(name: [20]u8, regions: []Instrument_Region) -> Instrument
     return result
 }
 
-create_instruments :: proc(infos: []Instrument_Info, all_zones: []Zone, all_regions: []Instrument_Region) -> ([dynamic]Instrument, Error) {
-    result: [dynamic]Instrument = nil
+create_instruments :: proc(infos: []Instrument_Info, all_zones: []Zone, all_regions: []Instrument_Region) -> ([]Instrument, Error) {
+    result: []Instrument = nil
     err: Error = nil
 
     defer {
@@ -29,7 +29,7 @@ create_instruments :: proc(infos: []Instrument_Info, all_zones: []Zone, all_regi
     // The last one is the terminator.
     instrument_count := len(infos) - 1
 
-    result = make([dynamic]Instrument, instrument_count)
+    result = make([]Instrument, instrument_count)
 
     region_index := 0
     for instrument_index := 0; instrument_index < instrument_count; instrument_index += 1 {

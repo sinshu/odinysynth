@@ -57,8 +57,8 @@ new_preset_info :: proc(r: io.Reader) -> (Preset_Info, Error) {
 }
 
 @(private)
-read_preset_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Preset_Info, Error) {
-    result: [dynamic]Preset_Info = nil
+read_preset_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([]Preset_Info, Error) {
+    result: []Preset_Info = nil
     err: Error = nil
 
     defer {
@@ -81,7 +81,7 @@ read_preset_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Prese
         return nil, err
     }
 
-    result = make([dynamic]Preset_Info, count)
+    result = make([]Preset_Info, count)
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_preset_info(r)

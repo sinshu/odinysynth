@@ -96,8 +96,8 @@ new_instrument_region :: proc(global: ^Zone, local: ^Zone, samples: []Sample_Hea
     return result, nil
 }
 
-create_instrument_regions :: proc(infos: []Instrument_Info, all_zones: []Zone, samples: []Sample_Header) -> ([dynamic]Instrument_Region, Error) {
-    result: [dynamic]Instrument_Region = nil
+create_instrument_regions :: proc(infos: []Instrument_Info, all_zones: []Zone, samples: []Sample_Header) -> ([]Instrument_Region, Error) {
+    result: []Instrument_Region = nil
     err: Error = nil
 
     defer {
@@ -111,7 +111,7 @@ create_instrument_regions :: proc(infos: []Instrument_Info, all_zones: []Zone, s
     // The last one is the terminator.
     instrument_count := len(infos) - 1
 
-    result = make([dynamic]Instrument_Region, instrument_region_count_regions(infos, all_zones))
+    result = make([]Instrument_Region, instrument_region_count_regions(infos, all_zones))
 
     region_index := 0
     for instrument_index := 0; instrument_index < instrument_count; instrument_index += 1 {

@@ -6,7 +6,7 @@ import "core:mem"
 @(private)
 Soundfont_Sample_Data :: struct {
     bits_per_sample: i32
-    samples: [dynamic]i16
+    samples: []i16
 }
 
 @(private)
@@ -70,7 +70,7 @@ new_soundfont_sample_data :: proc(r: io.Reader) -> (Soundfont_Sample_Data, Error
         switch id {
         case "smpl":
             result.bits_per_sample = 16
-            result.samples = make([dynamic]i16, size / 2)
+            result.samples = make([]i16, size / 2)
             n, err = io.read_full(r, mem.slice_data_cast([]u8, result.samples[:]))
         case "sm24":
             // 24 bit audio is not supported.

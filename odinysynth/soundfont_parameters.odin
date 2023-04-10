@@ -4,24 +4,24 @@ import "core:io"
 
 @(private)
 Soundfont_Parameters :: struct {
-    wave_data: [dynamic]i16,
-    sample_headers: [dynamic]Sample_Header,
-    instruments: [dynamic]Instrument,
-    instrument_regions: [dynamic]Instrument_Region,
+    wave_data: []i16,
+    sample_headers: []Sample_Header,
+    instruments: []Instrument,
+    instrument_regions: []Instrument_Region,
 }
 
 @(private)
 new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) {
-    preset_infos: [dynamic]Preset_Info = nil
-    preset_bag: [dynamic]Zone_Info = nil
-    preset_generators: [dynamic]Generator = nil
-    instrument_infos: [dynamic]Instrument_Info = nil
-    instrument_bag: [dynamic]Zone_Info = nil
-    instrument_generators: [dynamic]Generator = nil
-    instrument_zones: [dynamic]Zone = nil
-    instrument_regions: [dynamic]Instrument_Region = nil
-    instruments: [dynamic]Instrument = nil
-    sample_headers: [dynamic]Sample_Header = nil
+    preset_infos: []Preset_Info = nil
+    preset_bag: []Zone_Info = nil
+    preset_generators: []Generator = nil
+    instrument_infos: []Instrument_Info = nil
+    instrument_bag: []Zone_Info = nil
+    instrument_generators: []Generator = nil
+    instrument_zones: []Zone = nil
+    instrument_regions: []Instrument_Region = nil
+    instruments: []Instrument = nil
+    sample_headers: []Sample_Header = nil
     err: Error = nil
 
     defer {

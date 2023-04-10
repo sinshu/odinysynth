@@ -94,7 +94,7 @@ read_fixed_length_string :: proc(r: io.Reader, data: []u8) -> io.Error {
 
 @(private)
 discard_data :: proc(r: io.Reader, size: int) -> io.Error {
-    data := make([dynamic]u8, size)
+    data := make([]u8, size)
     defer delete(data)
 
     n, err := io.read_full(r, data[:])

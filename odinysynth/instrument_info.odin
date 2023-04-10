@@ -27,8 +27,8 @@ new_instrument_info :: proc(r: io.Reader) -> (Instrument_Info, Error) {
 }
 
 @(private)
-read_instrument_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Instrument_Info, Error) {
-    result: [dynamic]Instrument_Info = nil
+read_instrument_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([]Instrument_Info, Error) {
+    result: []Instrument_Info = nil
     err: Error = nil
 
     defer {
@@ -51,7 +51,7 @@ read_instrument_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]I
         return nil, err
     }
 
-    result = make([dynamic]Instrument_Info, count)
+    result = make([]Instrument_Info, count)
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_instrument_info(r)

@@ -3,17 +3,17 @@ package odinysynth
 import "core:io"
 
 Soundfont :: struct {
-    wave_data: [dynamic]i16,
-    sample_headers: [dynamic]Sample_Header,
-    instruments: [dynamic]Instrument,
-    instrument_regions: [dynamic]Instrument_Region,
+    wave_data: []i16,
+    sample_headers: []Sample_Header,
+    instruments: []Instrument,
+    instrument_regions: []Instrument_Region,
 }
 
 new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
-    wave_data: [dynamic]i16 = nil
-    sample_headers: [dynamic]Sample_Header = nil
-    instruments: [dynamic]Instrument = nil
-    instrument_regions: [dynamic]Instrument_Region = nil
+    wave_data: []i16 = nil
+    sample_headers: []Sample_Header = nil
+    instruments: []Instrument = nil
+    instrument_regions: []Instrument_Region = nil
     err: Error = nil
 
     defer {

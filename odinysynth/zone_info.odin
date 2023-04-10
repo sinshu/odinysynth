@@ -28,8 +28,8 @@ new_zone_info :: proc(r: io.Reader) -> (Zone_Info, Error) {
 }
 
 @(private)
-read_zone_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Zone_Info, Error) {
-    result: [dynamic]Zone_Info = nil
+read_zone_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([]Zone_Info, Error) {
+    result: []Zone_Info = nil
     err: Error = nil
 
     defer {
@@ -46,7 +46,7 @@ read_zone_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([dynamic]Zone_In
     }
 
     count := size / 4
-    result = make([dynamic]Zone_Info, count)
+    result = make([]Zone_Info, count)
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_zone_info(r)
