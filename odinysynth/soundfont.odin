@@ -70,7 +70,7 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
     fmt.println(size)
     fmt.println(sum)
     for h in parameters.sample_headers {
-        fmt.printf("%s\n", h.name)
+        //fmt.printf("%s\n", h.name)
     }
 
     result: Soundfont = {}
