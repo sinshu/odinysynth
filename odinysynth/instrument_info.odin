@@ -11,10 +11,9 @@ Instrument_Info :: struct {
 @(private)
 new_instrument_info :: proc(r: io.Reader) -> (Instrument_Info, Error) {
     result: Instrument_Info = {}
-    n: int = 0
     err: Error = nil
 
-    n, err = io.read_full(r, result.name[:])
+    err = read_fixed_length_string(r, result.name[:])
     if err != nil {
         return {}, err
     }

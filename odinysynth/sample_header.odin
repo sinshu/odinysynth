@@ -18,10 +18,9 @@ Sample_Header :: struct {
 @(private)
 new_sample_header :: proc(r: io.Reader) -> (Sample_Header, Error) {
     result: Sample_Header = {}
-    n: int = 0
     err: Error = nil
 
-    n, err = io.read_full(r, result.name[:])
+    err = read_fixed_length_string(r, result.name[:])
     if err != nil {
         return {}, err
     }

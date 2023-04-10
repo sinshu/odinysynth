@@ -12,7 +12,7 @@ main :: proc() {
     mem.tracking_allocator_init(&track, context.allocator)
     context.allocator = mem.tracking_allocator(&track)
 
-    file, err1 := os.open("TimGM6mb.sf2", os.O_RDONLY)
+    file, err1 := os.open("GeneralUser GS MuseScore v1.442.sf2", os.O_RDONLY)
     if err1 != os.ERROR_NONE {
         panic("OOPS!")
     }
