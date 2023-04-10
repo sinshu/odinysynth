@@ -4,6 +4,7 @@ import "core:fmt"
 import "core:io"
 import "core:mem"
 import "core:os"
+import "core:testing"
 import "odinysynth"
 
 main :: proc() {
@@ -28,4 +29,9 @@ main :: proc() {
     for bad_free in track.bad_free_array {
         fmt.printf("%v allocation %p was freed badly\n", bad_free.location, bad_free.memory)
     }
+}
+
+@(test)
+hello :: proc(t: ^testing.T) {
+    fmt.printf("TEST!!\n")
 }
