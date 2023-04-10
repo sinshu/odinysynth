@@ -199,7 +199,7 @@ instrument_get_initial_filter_cutoff_frequency :: proc(ir: ^Instrument_Region) -
 }
 
 instrument_get_initial_filter_q :: proc(ir: ^Instrument_Region) -> f32 {
-    return f32(0.1) * f32(ir.gs[Generator_Type.Initial_Filter_Q])
+    return 0.1 * f32(ir.gs[Generator_Type.Initial_Filter_Q])
 }
 
 instrument_get_modulation_lfo_to_filter_cutoff_frequency :: proc(ir: ^Instrument_Region) -> i32 {
@@ -211,19 +211,19 @@ instrument_get_modulation_envelope_to_filter_cutoff_frequency :: proc(ir: ^Instr
 }
 
 instrument_get_modulation_lfo_to_volume :: proc(ir: ^Instrument_Region) -> f32 {
-    return f32(0.1) * f32(ir.gs[Generator_Type.Modulation_Lfo_To_Volume])
+    return 0.1 * f32(ir.gs[Generator_Type.Modulation_Lfo_To_Volume])
 }
 
 instrument_get_chorus_effects_send :: proc(ir: ^Instrument_Region) -> f32 {
-    return f32(0.1) * f32(ir.gs[Generator_Type.Chorus_Effects_Send])
+    return 0.1 * f32(ir.gs[Generator_Type.Chorus_Effects_Send])
 }
 
 instrument_get_reverb_effects_send :: proc(ir: ^Instrument_Region) -> f32 {
-    return f32(0.1) * f32(ir.gs[Generator_Type.Reverb_Effects_Send])
+    return 0.1 * f32(ir.gs[Generator_Type.Reverb_Effects_Send])
 }
 
 instrument_get_pan :: proc(ir: ^Instrument_Region) -> f32 {
-    return f32(0.1) * f32(ir.gs[Generator_Type.Pan])
+    return 0.1 * f32(ir.gs[Generator_Type.Pan])
 }
 
 instrument_get_delay_modulation_lfo :: proc(ir: ^Instrument_Region) -> f32 {
@@ -259,7 +259,7 @@ instrument_get_decay_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 
 }
 
 instrument_get_sustain_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 {
-    return f32(0.1) * f32(ir.gs[Generator_Type.Sustain_Modulation_Envelope])
+    return 0.1 * f32(ir.gs[Generator_Type.Sustain_Modulation_Envelope])
 }
 
 instrument_get_release_modulation_envelope :: proc(ir: ^Instrument_Region) -> f32 {
@@ -291,7 +291,7 @@ instrument_get_decay_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
 }
 
 instrument_get_sustain_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
-    return f32(0.1) * f32(ir.gs[Generator_Type.Sustain_Volume_Envelope])
+    return 0.1 * f32(ir.gs[Generator_Type.Sustain_Volume_Envelope])
 }
 
 instrument_get_release_volume_envelope :: proc(ir: ^Instrument_Region) -> f32 {
@@ -323,7 +323,7 @@ instrument_get_velocity_range_end :: proc(ir: ^Instrument_Region) -> i32 {
 }
 
 instrument_get_initial_attenuation :: proc(ir: ^Instrument_Region) -> f32 {
-    return f32(0.1) * f32(ir.gs[Generator_Type.Initial_Attenuation])
+    return 0.1 * f32(ir.gs[Generator_Type.Initial_Attenuation])
 }
 
 instrument_get_coarse_tune :: proc(ir: ^Instrument_Region) -> i32 {
