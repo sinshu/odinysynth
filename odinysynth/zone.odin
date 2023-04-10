@@ -4,13 +4,8 @@ Zone :: struct {
     generators: []Generator,
 }
 
-empty_generators: [0]Generator
-
-get_empty_zone :: proc() -> Zone {
-    return Zone {
-        generators = empty_generators[:]
-    }
-}
+empty_generators: [0]Generator = {}
+empty_zone: Zone = { generators = empty_generators[:] }
 
 new_zone :: proc(info: ^Zone_Info, generators: []Generator) -> Zone {
     start := int(info.generator_index)

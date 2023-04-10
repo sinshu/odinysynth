@@ -10,4 +10,5 @@ Error :: union #shared_nil {
 Odinysynth_Error :: enum {
     None = 0,
     Invalid_Soundfont,
+    Unexpected,
 }

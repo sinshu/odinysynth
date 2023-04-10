@@ -1,11 +1,13 @@
 package odinysynth
 
-import "core:fmt"
 import "core:io"
 
 @(private)
 Soundfont_Parameters :: struct {
-    sample_headers: [dynamic]Sample_Header
+    wave_data: [dynamic]i16,
+    sample_headers: [dynamic]Sample_Header,
+    instruments: [dynamic]Instrument,
+    instrument_regions: [dynamic]Instrument_Region,
 }
 
 @(private)
@@ -16,6 +18,9 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
     instrument_infos: [dynamic]Instrument_Info = nil
     instrument_bag: [dynamic]Zone_Info = nil
     instrument_generators: [dynamic]Generator = nil
+    instrument_zones: [dynamic]Zone = nil
+    instrument_regions: [dynamic]Instrument_Region = nil
+    instruments: [dynamic]Instrument = nil
     sample_headers: [dynamic]Sample_Header = nil
     err: Error = nil
 
@@ -38,8 +43,17 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
         if instrument_generators != nil {
             delete(instrument_generators)
         }
+        if instrument_zones != nil {
+            delete(instrument_zones)
+        }
 
         if err != nil {
+            if instrument_regions != nil {
+                delete(sample_headers)
+            }
+            if instruments != nil {
+                delete(instruments)
+            }
             if sample_headers != nil {
                 delete(sample_headers)
             }
@@ -148,12 +162,27 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
         return {}, nil
     }
 
-    result: Soundfont_Parameters = {}
-    result.sample_headers = sample_headers
-
-    for h in instrument_infos {
-        fmt.printf("%s\n", h.name)
+    instrument_zones, err = create_zones(instrument_bag[:], instrument_generators[:])
+    if err != nil {
+        err = Odinysynth_Error.Invalid_Soundfont
+        return {}, nil
     }
 
+    instrument_regions, err = create_instrument_regions(instrument_infos[:], instrument_zones[:], sample_headers[:])
+    if err != nil {
+        err = Odinysynth_Error.Invalid_Soundfont
+        return {}, nil
+    }
+
+    instruments, err = create_instruments(instrument_infos[:], instrument_zones[:], instrument_regions[:])
+    if err != nil {
+        err = Odinysynth_Error.Invalid_Soundfont
+        return {}, nil
+    }
+
+    result: Soundfont_Parameters = {}
+    result.sample_headers = sample_headers
+    result.instruments = instruments
+    result.instrument_regions = instrument_regions
     return result, nil
 }

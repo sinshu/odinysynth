@@ -95,3 +95,57 @@ new_instrument_region :: proc(global: ^Zone, local: ^Zone, samples: []Sample_Hea
     result.gs = gs
     return result, nil
 }
+
+create_instrument_regions :: proc(infos: []Instrument_Info, all_zones: []Zone, samples: []Sample_Header) -> ([dynamic]Instrument_Region, Error) {
+    result: [dynamic]Instrument_Region = nil
+    err: Error = nil
+
+    defer {
+        if err != nil {
+            if result != nil {
+                delete(result)
+            }
+        }
+    }
+
+    // The last one is the terminator.
+    instrument_count := len(infos) - 1
+
+    result = make([dynamic]Instrument_Region, instrument_region_count_regions(infos, all_zones))
+
+    region_index := 0
+    for instrument_index := 0; instrument_index < instrument_count; instrument_index += 1 {
+        info := infos[instrument_index]
+        zones := all_zones[info.zone_start_index:info.zone_end_index]
+
+        // Is the first one the global zone?
+        if instrument_region_contains_global_zone(zones) {
+            // The first one is the global zone.
+            for i := 0; i < len(zones) - 1; i += 1 {
+                result[region_index], err = new_instrument_region(&zones[0], &zones[i + 1], samples)
+                if err != nil {
+                    err = Odinysynth_Error.Invalid_Soundfont
+                    return nil, err
+                }
+                region_index += 1
+            }
+        } else {
+            // No global zone.
+            for i := 0; i < len(zones); i += 1 {
+                result[region_index], err = new_instrument_region(&empty_zone, &zones[i], samples)
+                if err != nil {
+                    err = Odinysynth_Error.Invalid_Soundfont
+                    return nil, err
+                }
+                region_index += 1
+            }
+        }
+    }
+
+    if region_index != len(result) {
+        err = Odinysynth_Error.Unexpected
+        return nil, err
+    }
+
+    return result, nil
+}

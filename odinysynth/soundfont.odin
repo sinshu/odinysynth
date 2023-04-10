@@ -1,16 +1,19 @@
 package odinysynth
 
-import "core:fmt"
 import "core:io"
 
 Soundfont :: struct {
-    wave_data: [dynamic]i16
-    sample_headers: [dynamic]Sample_Header
+    wave_data: [dynamic]i16,
+    sample_headers: [dynamic]Sample_Header,
+    instruments: [dynamic]Instrument,
+    instrument_regions: [dynamic]Instrument_Region,
 }
 
 new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
     wave_data: [dynamic]i16 = nil
     sample_headers: [dynamic]Sample_Header = nil
+    instruments: [dynamic]Instrument = nil
+    instrument_regions: [dynamic]Instrument_Region = nil
     err: Error = nil
 
     defer {
@@ -20,6 +23,12 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
             }
             if sample_headers != nil {
                 delete(sample_headers)
+            }
+            if instruments != nil {
+                delete(instruments)
+            }
+            if instrument_regions != nil {
+                delete(instrument_regions)
             }
         }
     }
@@ -62,26 +71,22 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
     parameters: Soundfont_Parameters
     parameters, err = new_soundfont_parameters(r)
     sample_headers = parameters.sample_headers
-
-    sum: int = 0
-    for value in sample_data.samples {
-        sum += int(value)
-    }
-    fmt.println(size)
-    fmt.println(sum)
-    for h in parameters.sample_headers {
-        //fmt.printf("%s\n", h.name)
-    }
+    instruments = parameters.instruments
+    instrument_regions = parameters.instrument_regions
 
     result: Soundfont = {}
     result.wave_data = wave_data
     result.sample_headers = sample_headers
+    result.instruments = instruments
+    result.instrument_regions = instrument_regions
     return result, nil
 }
 
 destroy_soundfont :: proc(soundfont: Soundfont) {
     delete(soundfont.wave_data)
     delete(soundfont.sample_headers)
+    delete(soundfont.instruments)
+    delete(soundfont.instrument_regions)
 }
 
 @(private)

@@ -21,6 +21,21 @@ main :: proc() {
     reader := io.Reader { stream = os.stream_from_handle(file) }
 
     soundfont, err2 := odinysynth.new_soundfont(reader)
+
+    cnt := 0
+    for inst in soundfont.instruments {
+        fmt.printf("%s\n", inst.name)
+        for reg in inst.regions {
+            fmt.printf("    %s\n", reg.sample.name)
+            fmt.print("    ")
+            fmt.println(reg.gs)
+        }
+        cnt += 1
+        if cnt == 3 {
+            break
+        }
+    }
+
     odinysynth.destroy_soundfont(soundfont)
 
     for _, leak in track.allocation_map {
