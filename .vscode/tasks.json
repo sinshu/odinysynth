@@ -6,9 +6,23 @@
             "type": "shell",
             "command": "odin build . -debug",
             "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "problemMatcher": {
+                "owner": "odin",
+                "source": "odin",
+                "fileLocation": "absolute",
+                "severity": "error",
+                "pattern": {
+                    "regexp": "(.*)[(]([0-9]+)[:]([0-9]+)[)](.*)",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "message": 4,
+                },
+            },
+            "presentation": {
+                "reveal": "silent",
+                "clear": true,
+            },
         }
     ]
 }
