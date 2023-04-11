@@ -76,10 +76,16 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
 
     sample_data: Soundfont_Sample_Data
     sample_data, err = new_soundfont_sample_data(r)
+    if err != nil {
+        return {}, err
+    }
     wave_data = sample_data.samples
 
     parameters: Soundfont_Parameters
     parameters, err = new_soundfont_parameters(r)
+    if err != nil {
+        return {}, err
+    }
     sample_headers = parameters.sample_headers
     presets = parameters.presets
     preset_regions = parameters.preset_regions
