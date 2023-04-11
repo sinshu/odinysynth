@@ -8,6 +8,8 @@ import "core:testing"
 import "odinysynth"
 
 main :: proc() {
+    using odinysynth
+
     track: mem.Tracking_Allocator
     mem.tracking_allocator_init(&track, context.allocator)
     context.allocator = mem.tracking_allocator(&track)
@@ -20,11 +22,12 @@ main :: proc() {
 
     reader := io.Reader { stream = os.stream_from_handle(file) }
 
-    soundfont, err2 := odinysynth.new_soundfont(reader)
+    soundfont, err2 := new_soundfont(reader)
 
-    fmt.printf("OK\n")
+    fmt.println(get_attack_volume_envelope(&soundfont.instruments[0].regions[0]))
+    fmt.println("OK!")
 
-    odinysynth.destroy_soundfont(&soundfont)
+    destroy(&soundfont)
 
     for _, leak in track.allocation_map {
     fmt.printf("%v leaked %v bytes\n", leak.location, leak.size)
