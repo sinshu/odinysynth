@@ -57,8 +57,8 @@ read_zone_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([]Zone_Info, Err
     }
 
     for i := 0; i < count - 1; i += 1 {
-        result[i].generator_count = result[i + 1].generator_index - result[i].generator_index;
-        result[i].modulator_count = result[i + 1].modulator_index - result[i].modulator_index;
+        result[i].generator_count = result[i + 1].generator_index - result[i].generator_index
+        result[i].modulator_count = result[i + 1].modulator_index - result[i].modulator_index
     }
 
     return result, nil

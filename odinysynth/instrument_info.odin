@@ -62,7 +62,7 @@ read_instrument_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([]Instrume
     }
 
     for i := 0; i < count - 1; i += 1 {
-        result[i].zone_end_index = result[i + 1].zone_start_index;
+        result[i].zone_end_index = result[i + 1].zone_start_index
     }
 
     return result, nil

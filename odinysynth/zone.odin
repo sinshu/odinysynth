@@ -49,5 +49,5 @@ create_zones :: proc(infos: []Zone_Info, generators: []Generator) -> ([]Zone, Er
         result[i] = new_zone(&infos[i], generators)
     }
 
-    return result, nil;
+    return result, nil
 }
