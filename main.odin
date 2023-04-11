@@ -45,8 +45,3 @@ main :: proc() {
         fmt.printf("%v allocation %p was freed badly\n", bad_free.location, bad_free.memory)
     }
 }
-
-@(test)
-hello :: proc(t: ^testing.T) {
-    fmt.printf("TEST!!\n")
-}
