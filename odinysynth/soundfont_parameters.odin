@@ -135,49 +135,49 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
 
     if preset_infos == nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
     if preset_bag == nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
     if preset_generators == nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
     if instrument_infos == nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
     if instrument_bag == nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
     if instrument_generators == nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
     if sample_headers == nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
 
     instrument_zones, err = create_zones(instrument_bag[:], instrument_generators[:])
     if err != nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
 
     instrument_regions, err = create_instrument_regions(instrument_infos[:], instrument_zones[:], sample_headers[:])
     if err != nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
 
     instruments, err = create_instruments(instrument_infos[:], instrument_zones[:], instrument_regions[:])
     if err != nil {
         err = Odinysynth_Error.Invalid_Soundfont
-        return {}, nil
+        return {}, err
     }
 
     result: Soundfont_Parameters = {}

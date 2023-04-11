@@ -108,5 +108,11 @@ skip_soundfont_info :: proc(r: io.Reader) -> Error {
     if err != nil {
         return err
     }
-    return discard_data(r, int(size))
+
+    err = discard_data(r, int(size))
+    if err != nil {
+        return err
+    }
+
+    return nil
 }

@@ -60,7 +60,7 @@ read_four_cc :: proc(r: io.Reader) -> ([4]u8, io.Error) {
     data: [4]u8
     n, err := io.read_full(r, data[:])
     if err != nil {
-        return data, err
+        return {}, err
     }
 
     for value, i in data {
