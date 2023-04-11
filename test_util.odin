@@ -115,3 +115,13 @@ check_preset_region :: proc(t: ^testing.T, pr: ^odinysynth.Preset_Region, values
     are_equal(t, f64(odinysynth.preset_get_fine_tune(pr)), values[37])
     are_equal(t, f64(odinysynth.preset_get_scale_tuning(pr)), values[38])
 }
+
+check_sample_header :: proc(t: ^testing.T, sh: ^odinysynth.Sample_Header, values: []f64) {
+    are_equal(t, f64(sh.start), values[0])
+    are_equal(t, f64(sh.end), values[1])
+    are_equal(t, f64(sh.start_loop), values[2])
+    are_equal(t, f64(sh.end_loop), values[3])
+    are_equal(t, f64(sh.sample_rate), values[4])
+    are_equal(t, f64(sh.original_pitch), values[5])
+    are_equal(t, f64(sh.pitch_correction), values[6])
+}
