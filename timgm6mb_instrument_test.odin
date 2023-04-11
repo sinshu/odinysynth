@@ -19,7 +19,7 @@ timgm6mb_instrument_test :: proc(t: ^testing.T) {
     if err2 != nil {
         testing.fail(t)
     }
-    defer odinysynth.destroy_soundfont(sf)
+    defer odinysynth.destroy_soundfont(&sf)
 
     values: [50]f64
 

@@ -82,7 +82,7 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
     return result, nil
 }
 
-destroy_soundfont :: proc(soundfont: Soundfont) {
+destroy_soundfont :: proc(soundfont: ^Soundfont) {
     delete(soundfont.wave_data)
     delete(soundfont.sample_headers)
     delete(soundfont.instruments)

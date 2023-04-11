@@ -27,8 +27,6 @@ main :: proc() {
         fmt.printf("%s\n", inst.name)
         for reg in inst.regions {
             fmt.printf("    %s\n", reg.sample.name)
-            fmt.print("    ")
-            fmt.println(reg.gs)
         }
         cnt += 1
         if cnt == 3 {
@@ -36,7 +34,7 @@ main :: proc() {
         }
     }
 
-    odinysynth.destroy_soundfont(soundfont)
+    odinysynth.destroy_soundfont(&soundfont)
 
     for _, leak in track.allocation_map {
     fmt.printf("%v leaked %v bytes\n", leak.location, leak.size)
