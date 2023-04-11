@@ -11,13 +11,14 @@ Soundfont_Sample_Data :: struct {
 
 @(private)
 new_soundfont_sample_data :: proc(r: io.Reader) -> (Soundfont_Sample_Data, Error) {
-    result: Soundfont_Sample_Data = {}
+    samples: []i16 = nil
+    bits_per_sample: i32 = 0
     err: Error = nil
 
     defer {
         if err != nil {
-            if result.samples != nil {
-                delete(result.samples)
+            if samples != nil {
+                delete(samples)
             }
         }
     }
@@ -68,10 +69,10 @@ new_soundfont_sample_data :: proc(r: io.Reader) -> (Soundfont_Sample_Data, Error
 
         switch id {
         case "smpl":
-            result.bits_per_sample = 16
-            result.samples = make([]i16, size / 2)
+            bits_per_sample = 16
+            samples = make([]i16, size / 2)
             n: int
-            n, err = io.read_full(r, mem.slice_data_cast([]u8, result.samples[:]))
+            n, err = io.read_full(r, mem.slice_data_cast([]u8, samples[:]))
         case "sm24":
             // 24 bit audio is not supported.
             err = discard_data(r, int(size))
@@ -85,10 +86,13 @@ new_soundfont_sample_data :: proc(r: io.Reader) -> (Soundfont_Sample_Data, Error
         pos += size
     }
 
-    if result.samples == nil {
+    if samples == nil {
         err = Odinysynth_Error.Invalid_Soundfont
         return {}, err
     }
 
+    result: Soundfont_Sample_Data = {}
+    result.bits_per_sample = bits_per_sample
+    result.samples = samples
     return result, nil
 }
