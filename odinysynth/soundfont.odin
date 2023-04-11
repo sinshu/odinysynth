@@ -5,6 +5,8 @@ import "core:io"
 Soundfont :: struct {
     wave_data: []i16,
     sample_headers: []Sample_Header,
+    presets: []Preset,
+    preset_regions: []Preset_Region,
     instruments: []Instrument,
     instrument_regions: []Instrument_Region,
 }
@@ -12,6 +14,8 @@ Soundfont :: struct {
 new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
     wave_data: []i16 = nil
     sample_headers: []Sample_Header = nil
+    presets: []Preset = nil
+    preset_regions: []Preset_Region = nil
     instruments: []Instrument = nil
     instrument_regions: []Instrument_Region = nil
     err: Error = nil
@@ -23,6 +27,12 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
             }
             if sample_headers != nil {
                 delete(sample_headers)
+            }
+            if presets != nil {
+                delete(presets)
+            }
+            if preset_regions != nil {
+                delete(preset_regions)
             }
             if instruments != nil {
                 delete(instruments)
@@ -71,12 +81,16 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
     parameters: Soundfont_Parameters
     parameters, err = new_soundfont_parameters(r)
     sample_headers = parameters.sample_headers
+    presets = parameters.presets
+    preset_regions = parameters.preset_regions
     instruments = parameters.instruments
     instrument_regions = parameters.instrument_regions
 
     result: Soundfont = {}
     result.wave_data = wave_data
     result.sample_headers = sample_headers
+    result.presets = presets
+    result.preset_regions = preset_regions
     result.instruments = instruments
     result.instrument_regions = instrument_regions
     return result, nil
@@ -85,6 +99,8 @@ new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
 destroy_soundfont :: proc(soundfont: ^Soundfont) {
     delete(soundfont.wave_data)
     delete(soundfont.sample_headers)
+    delete(soundfont.presets)
+    delete(soundfont.preset_regions)
     delete(soundfont.instruments)
     delete(soundfont.instrument_regions)
 }

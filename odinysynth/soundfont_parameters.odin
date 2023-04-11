@@ -6,6 +6,8 @@ import "core:io"
 Soundfont_Parameters :: struct {
     wave_data: []i16,
     sample_headers: []Sample_Header,
+    presets: []Preset,
+    preset_regions: []Preset_Region,
     instruments: []Instrument,
     instrument_regions: []Instrument_Region,
 }
@@ -15,6 +17,9 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
     preset_infos: []Preset_Info = nil
     preset_bag: []Zone_Info = nil
     preset_generators: []Generator = nil
+    preset_zones: []Zone = nil
+    preset_regions: []Preset_Region = nil
+    presets: []Preset = nil
     instrument_infos: []Instrument_Info = nil
     instrument_bag: []Zone_Info = nil
     instrument_generators: []Generator = nil
@@ -34,6 +39,9 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
         if preset_generators != nil {
             delete(preset_generators)
         }
+        if preset_zones != nil {
+            delete(preset_zones)
+        }
         if instrument_infos != nil {
             delete(instrument_infos)
         }
@@ -48,8 +56,14 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
         }
 
         if err != nil {
+            if preset_regions != nil {
+                delete(preset_regions)
+            }
+            if presets != nil {
+                delete(presets)
+            }
             if instrument_regions != nil {
-                delete(sample_headers)
+                delete(instrument_regions)
             }
             if instruments != nil {
                 delete(instruments)
@@ -180,8 +194,28 @@ new_soundfont_parameters :: proc(r: io.Reader) -> (Soundfont_Parameters, Error) 
         return {}, err
     }
 
+    preset_zones, err = create_zones(preset_bag[:], preset_generators[:])
+    if err != nil {
+        err = Odinysynth_Error.Invalid_Soundfont
+        return {}, err
+    }
+
+    preset_regions, err = create_preset_regions(preset_infos[:], preset_zones[:], instruments[:])
+    if err != nil {
+        err = Odinysynth_Error.Invalid_Soundfont
+        return {}, err
+    }
+
+    presets, err = create_presets(preset_infos[:], preset_zones[:], preset_regions[:])
+    if err != nil {
+        err = Odinysynth_Error.Invalid_Soundfont
+        return {}, err
+    }
+
     result: Soundfont_Parameters = {}
     result.sample_headers = sample_headers
+    result.presets = presets
+    result.preset_regions = preset_regions
     result.instruments = instruments
     result.instrument_regions = instrument_regions
     return result, nil

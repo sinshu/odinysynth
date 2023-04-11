@@ -22,17 +22,7 @@ main :: proc() {
 
     soundfont, err2 := odinysynth.new_soundfont(reader)
 
-    cnt := 0
-    for inst in soundfont.instruments {
-        fmt.printf("%s\n", inst.name)
-        for reg in inst.regions {
-            fmt.printf("    %s\n", reg.sample.name)
-        }
-        cnt += 1
-        if cnt == 3 {
-            break
-        }
-    }
+    fmt.printf("OK\n")
 
     odinysynth.destroy_soundfont(&soundfont)
 
