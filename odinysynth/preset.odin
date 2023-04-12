@@ -35,7 +35,10 @@ create_presets :: proc(infos: []Preset_Info, all_zones: []Zone, all_regions: []P
     // The last one is the terminator.
     preset_count := len(infos) - 1
 
-    result = make([]Preset, preset_count)
+    result, err = make([]Preset, preset_count)
+    if err != nil {
+        return nil, err
+    }
 
     region_index := 0
     for preset_index := 0; preset_index < preset_count; preset_index += 1 {

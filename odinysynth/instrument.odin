@@ -31,7 +31,10 @@ create_instruments :: proc(infos: []Instrument_Info, all_zones: []Zone, all_regi
     // The last one is the terminator.
     instrument_count := len(infos) - 1
 
-    result = make([]Instrument, instrument_count)
+    result, err = make([]Instrument, instrument_count)
+    if err != nil {
+        return nil, err
+    }
 
     region_index := 0
     for instrument_index := 0; instrument_index < instrument_count; instrument_index += 1 {

@@ -47,7 +47,11 @@ read_zone_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([]Zone_Info, Err
     }
 
     count := size / 4
+    
     result = make([]Zone_Info, count)
+    if err != nil {
+        return nil, err
+    }
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_zone_info(r)

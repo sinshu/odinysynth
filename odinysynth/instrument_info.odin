@@ -52,7 +52,10 @@ read_instrument_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([]Instrume
         return nil, err
     }
 
-    result = make([]Instrument_Info, count)
+    result, err = make([]Instrument_Info, count)
+    if err != nil {
+        return nil, err
+    }
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_instrument_info(r)

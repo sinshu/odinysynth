@@ -44,6 +44,9 @@ create_zones :: proc(infos: []Zone_Info, generators: []Generator) -> ([]Zone, Er
     count := len(infos) - 1
 
     result = make([]Zone, count)
+    if err != nil {
+        return nil, err
+    }
 
     for i := 0; i < count; i += 1 {
         result[i] = new_zone(&infos[i], generators)

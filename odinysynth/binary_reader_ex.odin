@@ -3,7 +3,7 @@ package odinysynth
 import "core:io"
 
 @(private)
-read_i8 :: proc(r: io.Reader) -> (i8, io.Error) {
+read_i8 :: proc(r: io.Reader) -> (i8, Error) {
     value, err := io.read_byte(r)
     if err != nil {
         return 0, err
@@ -13,7 +13,7 @@ read_i8 :: proc(r: io.Reader) -> (i8, io.Error) {
 }
 
 @(private)
-read_u8 :: proc(r: io.Reader) -> (u8, io.Error) {
+read_u8 :: proc(r: io.Reader) -> (u8, Error) {
     value, err := io.read_byte(r)
     if err != nil {
         return 0, err
@@ -23,7 +23,7 @@ read_u8 :: proc(r: io.Reader) -> (u8, io.Error) {
 }
 
 @(private)
-read_i16 :: proc(r: io.Reader) -> (i16, io.Error) {
+read_i16 :: proc(r: io.Reader) -> (i16, Error) {
     data: [2]u8
     n, err := io.read_full(r, data[:])
     if err != nil {
@@ -34,7 +34,7 @@ read_i16 :: proc(r: io.Reader) -> (i16, io.Error) {
 }
 
 @(private)
-read_u16 :: proc(r: io.Reader) -> (u16, io.Error) {
+read_u16 :: proc(r: io.Reader) -> (u16, Error) {
     data: [2]u8
     n, err := io.read_full(r, data[:])
     if err != nil {
@@ -45,7 +45,7 @@ read_u16 :: proc(r: io.Reader) -> (u16, io.Error) {
 }
 
 @(private)
-read_i32 :: proc(r: io.Reader) -> (i32, io.Error) {
+read_i32 :: proc(r: io.Reader) -> (i32, Error) {
     data: [4]u8
     n, err := io.read_full(r, data[:])
     if err != nil {
@@ -56,7 +56,7 @@ read_i32 :: proc(r: io.Reader) -> (i32, io.Error) {
 }
 
 @(private)
-read_four_cc :: proc(r: io.Reader) -> ([4]u8, io.Error) {
+read_four_cc :: proc(r: io.Reader) -> ([4]u8, Error) {
     data: [4]u8
     n, err := io.read_full(r, data[:])
     if err != nil {
@@ -73,7 +73,7 @@ read_four_cc :: proc(r: io.Reader) -> ([4]u8, io.Error) {
 }
 
 @(private)
-read_fixed_length_string :: proc(r: io.Reader, data: []u8) -> io.Error {
+read_fixed_length_string :: proc(r: io.Reader, data: []u8) -> Error {
     n, err := io.read_full(r, data[:])
     if err != nil {
         return err
@@ -93,10 +93,26 @@ read_fixed_length_string :: proc(r: io.Reader, data: []u8) -> io.Error {
 }
 
 @(private)
-discard_data :: proc(r: io.Reader, size: int) -> io.Error {
-    data := make([]u8, size)
-    defer delete(data)
+discard_data :: proc(r: io.Reader, size: int) -> Error {
+    data: []u8 = nil
+    err: Error = nil
 
-    n, err := io.read_full(r, data[:])
-    return err
+    defer {
+        if data != nil {
+            delete(data)
+        }
+    }
+
+    data, err = make([]u8, size)
+    if err != nil {
+        return err
+    }
+
+    n: int
+    n, err = io.read_full(r, data[:])
+    if err != nil {
+        return err
+    }
+
+    return nil
 }

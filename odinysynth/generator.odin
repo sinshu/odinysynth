@@ -45,7 +45,11 @@ read_generators_from_chunk :: proc(r: io.Reader, size: int) -> ([]Generator, Err
     }
 
     count := size / 4 - 1
-    result = make([]Generator, count)
+    
+    result, err = make([]Generator, count)
+    if err != nil {
+        return nil, err
+    }
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_generator(r)

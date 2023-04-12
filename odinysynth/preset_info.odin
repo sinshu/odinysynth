@@ -83,6 +83,9 @@ read_preset_infos_from_chunk :: proc(r: io.Reader, size: int) -> ([]Preset_Info,
     }
 
     result = make([]Preset_Info, count)
+    if err != nil {
+        return nil, err
+    }
 
     for i := 0; i < count; i += 1 {
         result[i], err = new_preset_info(r)

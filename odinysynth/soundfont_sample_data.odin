@@ -70,17 +70,26 @@ new_soundfont_sample_data :: proc(r: io.Reader) -> (Soundfont_Sample_Data, Error
         switch id {
         case "smpl":
             bits_per_sample = 16
-            samples = make([]i16, size / 2)
+            samples, err = make([]i16, size / 2)
+            if err != nil {
+                return {}, err
+            }
             n: int
             n, err = io.read_full(r, mem.slice_data_cast([]u8, samples[:]))
+            if err != nil {
+                return {}, err
+            }
         case "sm24":
             // 24 bit audio is not supported.
             err = discard_data(r, int(size))
+            if err != nil {
+                return {}, err
+            }
         case:
             err = Odinysynth_Error.Invalid_Soundfont
-        }
-        if err != nil {
-            return {}, err
+            if err != nil {
+                return {}, err
+            }
         }
 
         pos += size
