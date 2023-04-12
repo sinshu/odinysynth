@@ -1,5 +1,6 @@
 package odinysynth
 
+@(private)
 Envelope_Stage :: enum {
     Delay = 0,
     Attack = 1,

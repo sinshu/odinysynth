@@ -8,10 +8,10 @@ Region_Pair :: struct {
 
 @(private)
 new_region_pair :: proc(preset: ^Preset_Region, instrument: ^Instrument_Region) -> Region_Pair {
-    return Region_Pair {
-        preset = preset,
-        instrument = instrument,
-    }
+    result: Region_Pair = {}
+    result.preset = preset
+    result.instrument = instrument
+    return result
 }
 
 @(private)
