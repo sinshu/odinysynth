@@ -41,7 +41,7 @@ start_lfo :: proc(lfo: ^Lfo, delay: f32, frequency: f32) {
 }
 
 @(private)
-process_lfo :: proc(lfo: ^Lfo, sample_count: int) {
+process_lfo :: proc(lfo: ^Lfo) {
     if !lfo.active {
         return
     }
