@@ -95,3 +95,28 @@ request_new_voice :: proc(vc: ^Voice_Collection, region: ^Instrument_Region, cha
     }
     return candidate
 }
+
+@(private)
+process_voice_collection :: proc(vc: ^Voice_Collection, channels: []Channel) {
+    i: int = 0
+	for {
+		if i == vc.active_voice_count {
+			return
+		}
+
+		if process_voice(&vc.voices[i], channels) {
+			i += 1
+		} else {
+			vc.active_voice_count -= 1
+
+			tmp := vc.voices[i]
+			vc.voices[i] = vc.voices[vc.active_voice_count]
+			vc.voices[vc.active_voice_count] = tmp
+		}
+	}
+}
+
+@(private)
+clear_voice_collection :: proc(vc: ^Voice_Collection) {
+    vc.active_voice_count = 0
+}
