@@ -2,8 +2,13 @@ package odinysynth
 
 import "core:math"
 
+@(private)
 HALF_PI :: math.PI / 2.0
+
+@(private)
 NON_AUDIBLE :: 1.0E-3
+
+@(private)
 LOG_NON_AUDIBLE :: -6.90775527898
 
 @(private)

@@ -1,5 +1,6 @@
 package odinysynth
 
+@(private)
 region_pair_start_oscillator :: proc(rp: ^Region_Pair, o: ^Oscillator, data: []i16) {
     sample_rate := int(rp.instrument.sample.sample_rate)
     loop_mode := Loop_Mode(region_pair_get_sample_modes(rp))
@@ -15,6 +16,7 @@ region_pair_start_oscillator :: proc(rp: ^Region_Pair, o: ^Oscillator, data: []i
     start_oscillator(o, data, loop_mode, sample_rate, start, end, start_loop, end_loop, root_key, coarse_tune, fine_tune, scale_tuning)
 }
 
+@(private)
 region_pair_start_volume_envelope :: proc(rp: ^Region_Pair, e: ^Volume_Envelope, key: i32) {
     // If the release time is shorter than 10 ms, it will be clamped to 10 ms to avoid pop noise.
     delay := region_pair_get_delay_volume_envelope(rp)
@@ -27,6 +29,7 @@ region_pair_start_volume_envelope :: proc(rp: ^Region_Pair, e: ^Volume_Envelope,
     start_volume_envelope(e, delay, attack, hold, decay, sustain, release)
 }
 
+@(private)
 region_pair_start_modulation_envelope :: proc(rp: ^Region_Pair, e: ^Modulation_Envelope, key: i32, velocity: i32) {
     // According to the implementation of TinySoundFont, the attack time should be adjusted by the velocity.
     delay := region_pair_get_delay_modulation_envelope(rp)
@@ -39,10 +42,12 @@ region_pair_start_modulation_envelope :: proc(rp: ^Region_Pair, e: ^Modulation_E
     start_modulation_envelope(e, delay, attack, hold, decay, sustain, release)
 }
 
+@(private)
 region_pair_start_vibrato :: proc(rp: ^Region_Pair, lfo: ^Lfo) {
     start_lfo(lfo, region_pair_get_delay_vibrato_lfo(rp), region_pair_get_frequency_vibrato_lfo(rp))
 }
 
+@(private)
 region_pair_start_modulation :: proc(rp: ^Region_Pair, lfo: ^Lfo) {
     start_lfo(lfo, region_pair_get_delay_modulation_lfo(rp), region_pair_get_frequency_modulation_lfo(rp))
 }

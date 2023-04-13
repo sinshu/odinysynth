@@ -2,8 +2,13 @@ package odinysynth
 
 import "core:math"
 
+@(private)
 FRAC_BITS :: 24
+
+@(private)
 FRAC_UNIT :: 1 << FRAC_BITS
+
+@(private)
 FP_TO_SAMPLE :: 1.0 / (32768.0 * f32(FRAC_UNIT))
 
 @(private)

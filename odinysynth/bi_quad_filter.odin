@@ -2,6 +2,7 @@ package odinysynth
 
 import "core:math"
 
+@(private)
 RESONANCE_PEAK_OFFSET :: 1.0 - 1.0 / 1.41421356237
 
 @(private)
