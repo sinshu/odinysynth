@@ -27,16 +27,16 @@ new_lfo :: proc(settings: ^Synthesizer_Settings) -> Lfo {
 @(private)
 start_lfo :: proc(lfo: ^Lfo, delay: f32, frequency: f32) {
     if frequency > 1.0e-3 {
-		lfo.active = true
+        lfo.active = true
 
-		lfo.delay = f64(delay)
-		lfo.period = 1.0 / f64(frequency)
+        lfo.delay = f64(delay)
+        lfo.period = 1.0 / f64(frequency)
 
-		lfo.processed_sample_count = 0
-		lfo.value = 0
-	} else {
-	    lfo.active = false
-	    lfo.value = 0
+        lfo.processed_sample_count = 0
+        lfo.value = 0
+    } else {
+        lfo.active = false
+        lfo.value = 0
     }
 }
 

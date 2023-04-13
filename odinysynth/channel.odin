@@ -146,23 +146,23 @@ channel_set_rpn_fine :: proc(ch: ^Channel, value: i32) {
 @(private)
 channel_data_entry_coarse :: proc(ch: ^Channel, value: i32) {
     switch ch.rpn {
-	case 0:
-		ch.pitch_bend_range = i16((i32(ch.pitch_bend_range) & 0x7F) | (value << 7))
-	case 1:
-		ch.fine_tune = i16((i32(ch.fine_tune) & 0x7F) | (value << 7))
-	case 2:
-		ch.coarse_tune = i16(value - 64)
-	}
+    case 0:
+        ch.pitch_bend_range = i16((i32(ch.pitch_bend_range) & 0x7F) | (value << 7))
+    case 1:
+        ch.fine_tune = i16((i32(ch.fine_tune) & 0x7F) | (value << 7))
+    case 2:
+        ch.coarse_tune = i16(value - 64)
+    }
 }
 
 @(private)
 channel_data_entry_fine :: proc(ch: ^Channel, value: i32) {
     switch ch.rpn {
-	case 0:
-		ch.pitch_bend_range = i16((i32(ch.pitch_bend_range) & 0xFF80) | value)
-	case 1:
-		ch.fine_tune = i16((i32(ch.fine_tune) & 0xFF80) | value)
-	}
+    case 0:
+        ch.pitch_bend_range = i16((i32(ch.pitch_bend_range) & 0xFF80) | value)
+    case 1:
+        ch.fine_tune = i16((i32(ch.fine_tune) & 0xFF80) | value)
+    }
 }
 
 @(private)
