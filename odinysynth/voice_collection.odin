@@ -1,11 +1,13 @@
 package odinysynth
 
+@(private)
 Voice_Collection :: struct {
     block_buffer: []f32,
     voices: []Voice,
     active_voice_count: int,
 }
 
+@(private)
 new_voice_collection :: proc(settings: ^Synthesizer_Settings) -> (Voice_Collection, Error) {
     block_buffer: []f32 = nil
     voices: []Voice = nil
@@ -46,11 +48,13 @@ new_voice_collection :: proc(settings: ^Synthesizer_Settings) -> (Voice_Collecti
     return result, nil
 }
 
+@(private)
 destroy_voice_collection :: proc(vc: ^Voice_Collection) {
     delete(vc.block_buffer)
     delete(vc.voices)
 }
 
+@(private)
 request_new_voice :: proc(vc: ^Voice_Collection, region: ^Instrument_Region, channel: i32) -> ^Voice {
     // If an exclusive class is assigned to the region, find a voice with the same class.
     // If found, reuse it to avoid playing multiple voices with the same class at a time.

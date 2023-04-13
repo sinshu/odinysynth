@@ -133,12 +133,14 @@ start_voice :: proc(v: ^Voice, data: []i16, rp: ^Region_Pair, channel: i32, key:
     v.voice_length = 0
 }
 
+@(private)
 end_voice :: proc(v: ^Voice) {
     if v.voice_state == Voice_State.Playing {
         v.voice_state = Voice_State.Release_Requested
     }
 }
 
+@(private)
 kill_voice :: proc(v: ^Voice) {
     v.note_gain = 0.0
 }
