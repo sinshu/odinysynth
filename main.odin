@@ -35,13 +35,12 @@ main :: proc() {
 
     settings := new_synthesizer_settings(44100)
     synthesizer, err3 := new_synthesizer(&soundfont, &settings)
-    note_on(&synthesizer, 0, 60, 100)
-    note_on(&synthesizer, 0, 64, 100)
-    note_on(&synthesizer, 0, 67, 100)
+    seq := new_midi_file_sequencer(&synthesizer)
+    play(&seq, &midi_file, false)
 
     left := make([]f32, 3 * settings.sample_rate)
     right := make([]f32, 3 * settings.sample_rate)
-    synthesizer_render(&synthesizer, left, right)
+    sequencer_render(&seq, left, right)
 
     max_value: f32 = 0
     for i := 0; i < len(left); i += 1 {
@@ -71,7 +70,7 @@ main :: proc() {
     delete(right)
     destroy(&synthesizer)
 
-    fmt.println(get_attack_volume_envelope(&soundfont.instruments[0].regions[0]))
+    fmt.println(get_length(&midi_file))
     fmt.println("OK!")
 
     destroy(&soundfont)

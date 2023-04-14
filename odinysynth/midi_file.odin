@@ -445,3 +445,7 @@ read_tempo :: proc(r: io.Reader) -> (i32, Error) {
     b3 := bs[2]
     return (i32(b1) << 16) | (i32(b2) << 8) | i32(b3), nil
 }
+
+get_length :: proc(mf: ^Midi_File) -> f64 {
+    return mf.times[len(mf.times) - 1]
+}
