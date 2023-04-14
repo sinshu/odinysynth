@@ -351,3 +351,61 @@ reset :: proc(s: ^Synthesizer) {
 
     s.block_read = s.block_size
 }
+
+synthesizer_render :: proc(s: ^Synthesizer, left: []f32, right: []f32) {
+    wrote := 0
+	length := len(left)
+	for wrote < length {
+		if s.block_read == s.block_size {
+			synthesizer_render_block(s)
+			s.block_read = 0
+		}
+
+		src_rem := s.block_size - s.block_read
+		dst_rem := length - wrote
+		rem := min(src_rem, dst_rem)
+
+		for i := 0; i < rem; i += 1 {
+			left[wrote + i] = s.block_left[s.block_read + i]
+			right[wrote + i] = s.block_right[s.block_read + i]
+		}
+
+		s.block_read += rem
+		wrote += rem
+	}
+}
+
+synthesizer_render_block :: proc(s: ^Synthesizer) {
+    block_size := s.block_size
+	active_voice_count := s.voices.active_voice_count
+
+	process_voice_collection(&s.voices, s.channels)
+
+	for i := 0; i < block_size; i += 1 {
+		s.block_left[i] = 0
+		s.block_right[i] = 0
+	}
+
+	for i := 0; i < active_voice_count; i += 1 {
+		voice := s.voices.voices[i]
+		previous_gain_left := s.master_volume * voice.previous_mix_gain_left
+		current_gain_left := s.master_volume * voice.current_mix_gain_left
+		synthesizer_write_block(s, previous_gain_left, current_gain_left, voice.block, s.block_left)
+		previous_gain_right := s.master_volume * voice.previous_mix_gain_right
+		current_gain_right := s.master_volume * voice.current_mix_gain_right
+		synthesizer_write_block(s, previous_gain_right, current_gain_right, voice.block, s.block_right)
+	}
+}
+
+synthesizer_write_block :: proc(s: ^Synthesizer, previous_gain: f32, current_gain: f32, source: []f32, destination: []f32) {
+    if max(previous_gain, current_gain) < NON_AUDIBLE {
+		return
+	}
+
+	if abs(current_gain - previous_gain) < 1.0e-3 {
+		array_multiply_add(current_gain, source, destination)
+	} else {
+		step := s.inverse_block_size * (current_gain - previous_gain)
+		array_multiply_add_slope(previous_gain, step, source, destination)
+	}
+}
