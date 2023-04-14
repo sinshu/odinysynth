@@ -24,6 +24,13 @@ main :: proc() {
 
     soundfont, err2 := new_soundfont(reader)
 
+    settings := new_synthesizer_settings(44100)
+    synthesizer, err3 := new_synthesizer(&soundfont, &settings)
+    for ch := 0; ch < 16; ch += 1 {
+        fmt.println(synthesizer.channels[ch].is_percussion_channel)
+    }
+    destroy(&synthesizer)
+
     fmt.println(get_attack_volume_envelope(&soundfont.instruments[0].regions[0]))
     fmt.println("OK!")
 
