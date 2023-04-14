@@ -5,22 +5,11 @@ import "core:io"
 import "core:mem"
 import "core:os"
 import "core:testing"
+import "core:time"
 import "odinysynth"
 
 main :: proc() {
-    track: mem.Tracking_Allocator
-    mem.tracking_allocator_init(&track, context.allocator)
-    context.allocator = mem.tracking_allocator(&track)
-
-    simple_chord()
     flourish()
-
-    for _, leak in track.allocation_map {
-        fmt.printf("%v leaked %v bytes\n", leak.location, leak.size)
-    }
-    for bad_free in track.bad_free_array {
-        fmt.printf("%v allocation %p was freed badly\n", bad_free.location, bad_free.memory)
-    }
 }
 
 simple_chord :: proc() {
@@ -90,7 +79,12 @@ flourish :: proc() {
     defer delete(right)
 
     // Render the waveform.
+    stopwatch := time.Stopwatch{}
+    time.stopwatch_start(&stopwatch)
     render(&sequencer, left[:], right[:])
+    time.stopwatch_stop(&stopwatch)
+    duration := time.stopwatch_duration(stopwatch)
+    fmt.printf("Time: %v s", time.duration_seconds(duration))
 
     // Export the waveform as a PCM file.
     write_pcm("flourish.pcm", left[:], right[:])
