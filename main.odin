@@ -20,16 +20,28 @@ main :: proc() {
     }
     defer os.close(file)
 
+    mid, err4 := os.open("flourish.mid", os.O_RDONLY)
+    if err4 != os.ERROR_NONE {
+        panic("OOPS!")
+    }
+    defer os.close(mid)
+
     reader := io.Reader { stream = os.stream_from_handle(file) }
 
-    soundfont, err2 := new_soundfont(reader)
+    reader2 := io.Reader { stream = os.stream_from_handle(mid) }
 
+    soundfont, err2 := new_soundfont(reader)
+    midi_file, err5 := new_midi_file(reader2)
 
     settings := new_synthesizer_settings(44100)
     synthesizer, err3 := new_synthesizer(&soundfont, &settings)
     note_on(&synthesizer, 0, 60, 100)
     note_on(&synthesizer, 0, 64, 100)
     note_on(&synthesizer, 0, 67, 100)
+
+    for time in midi_file.times {
+        fmt.println(time)
+    }
 
     left := make([]f32, 3 * settings.sample_rate)
     right := make([]f32, 3 * settings.sample_rate)
