@@ -1,6 +1,6 @@
 package odinysynth
 
-destroy :: proc{destroy_soundfont, destroy_synthesizer}
+destroy :: proc{destroy_soundfont, destroy_synthesizer, destroy_midi_file}
 
 get_sample_start :: proc{instrument_get_sample_start}
 get_sample_end :: proc{instrument_get_sample_end}

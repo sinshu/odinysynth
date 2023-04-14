@@ -163,6 +163,11 @@ new_midi_file :: proc(r: io.Reader) -> (Midi_File, Error) {
     return result, nil
 }
 
+destroy_midi_file :: proc(mf: ^Midi_File) {
+    delete(mf.messages)
+    delete(mf.times)
+}
+
 @(private)
 read_track :: proc(r: io.Reader) -> ([dynamic]Message, [dynamic]i32, Error) {
     messages: [dynamic]Message = nil

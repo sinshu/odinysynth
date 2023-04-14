@@ -39,10 +39,6 @@ main :: proc() {
     note_on(&synthesizer, 0, 64, 100)
     note_on(&synthesizer, 0, 67, 100)
 
-    for time in midi_file.times {
-        fmt.println(time)
-    }
-
     left := make([]f32, 3 * settings.sample_rate)
     right := make([]f32, 3 * settings.sample_rate)
     synthesizer_render(&synthesizer, left, right)
@@ -79,6 +75,7 @@ main :: proc() {
     fmt.println("OK!")
 
     destroy(&soundfont)
+    destroy(&midi_file)
 
     for _, leak in track.allocation_map {
     fmt.printf("%v leaked %v bytes\n", leak.location, leak.size)
