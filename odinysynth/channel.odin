@@ -4,8 +4,8 @@ package odinysynth
 Channel :: struct {
     is_percussion_channel: bool,
 
-    bank_number: int,
-    patch_number: int,
+    bank_number: i32,
+    patch_number: i32,
 
     modulation: i16,
     volume: i16,
@@ -28,6 +28,7 @@ Channel :: struct {
 new_channel :: proc(is_percussion_channel: bool) -> Channel {
     result: Channel = {}
     result.is_percussion_channel = is_percussion_channel
+    channel_reset(&result)
     return result
 }
 
@@ -66,7 +67,7 @@ channel_reset_all_controllers :: proc(ch: ^Channel) {
 
 @(private)
 channel_set_bank :: proc(ch: ^Channel, value: i32) {
-    ch.bank_number = int(value)
+    ch.bank_number = value
 
     if ch.is_percussion_channel {
         ch.bank_number += 128
@@ -75,7 +76,7 @@ channel_set_bank :: proc(ch: ^Channel, value: i32) {
 
 @(private)
 channel_set_patch :: proc(ch: ^Channel, value: i32) {
-    ch.patch_number = int(value)
+    ch.patch_number = value
 }
 
 @(private)

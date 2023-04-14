@@ -145,3 +145,209 @@ destroy_synthesizer :: proc(s: ^Synthesizer) {
     delete(s.block_left)
     delete(s.block_right)
 }
+
+process_midi_message :: proc(s: ^Synthesizer, channel: i32, command: i32, data1: i32, data2: i32) {
+    if !(0 <= channel && int(channel) < len(s.channels)) {
+        return
+    }
+
+    channel_info := &s.channels[channel]
+
+    switch command {
+    case 0x80: // Note Off
+        note_off(s, channel, data1)
+
+    case 0x90: // Note On
+        note_on(s, channel, data1, data2)
+
+    case 0xB0: // Controller
+        switch data1 {
+        case 0x00: // Bank Selection
+            channel_set_bank(channel_info, data2)
+
+        case 0x01: // Modulation Coarse
+            channel_set_modulation_coarse(channel_info, data2)
+
+        case 0x21: // Modulation Fine
+            channel_set_modulation_fine(channel_info, data2)
+
+        case 0x06: // Data Entry Coarse
+            channel_data_entry_coarse(channel_info, data2)
+
+        case 0x26: // Data Entry Fine
+            channel_data_entry_fine(channel_info, data2)
+
+        case 0x07: // Channel Volume Coarse
+            channel_set_volume_coarse(channel_info, data2)
+
+        case 0x27: // Channel Volume Fine
+            channel_set_volume_fine(channel_info, data2)
+
+        case 0x0A: // Pan Coarse
+            channel_set_pan_coarse(channel_info, data2)
+
+        case 0x2A: // Pan Fine
+            channel_set_pan_fine(channel_info, data2)
+
+        case 0x0B: // Expression Coarse
+            channel_set_expression_coarse(channel_info, data2)
+
+        case 0x2B: // Expression Fine
+            channel_set_expression_fine(channel_info, data2)
+
+        case 0x40: // Hold Pedal
+            channel_set_hold_pedal(channel_info, data2)
+
+        case 0x5B: // Reverb Send
+            channel_set_reverb_send(channel_info, data2)
+
+        case 0x5D: // Chorus Send
+            channel_set_chorus_send(channel_info, data2)
+
+        case 0x65: // RPN Coarse
+            channel_set_rpn_coarse(channel_info, data2)
+
+        case 0x64: // RPN Fine
+            channel_set_rpn_fine(channel_info, data2)
+
+        case 0x78: // All Sound Off
+            note_off_all_channel(s, channel, true)
+
+        case 0x79: // Reset All Controllers
+            reset_all_controllers_channel(s, channel)
+
+        case 0x7B: // All Note Off
+            note_off_all_channel(s, channel, false)
+        }
+
+    case 0xC0: // Program Change
+        channel_set_patch(channel_info, data1)
+
+    case 0xE0: // Pitch Bend
+        channel_set_pitch_bend(channel_info, data1, data2)
+    }
+}
+
+note_off :: proc(s: ^Synthesizer, channel: i32, key: i32) {
+    if !(0 <= channel && int(channel) < len(s.channels)) {
+        return
+    }
+
+    for i := 0; i < s.voices.active_voice_count; i += 1 {
+        voice := &s.voices.voices[i]
+        if voice.channel == channel && voice.key == key {
+            end_voice(voice)
+        }
+    }
+}
+
+note_on :: proc(s: ^Synthesizer, channel: i32, key: i32, velocity: i32) {
+    if velocity == 0 {
+        note_off(s, channel, key)
+        return
+    }
+
+    if !(0 <= channel && int(channel) < len(s.channels)) {
+        return
+    }
+
+    channel_info := &s.channels[channel]
+    preset_id := (channel_info.bank_number << 16) | channel_info.patch_number
+
+    preset, found := s.preset_lookup[preset_id]
+    if !found {
+        // Try fallback to the GM sound set.
+        // Normally, the given patch number + the bank number 0 will work.
+        // For drums (bank number >= 128), it seems to be better to select the standard set (128:0).
+        gm_preset_id: i32
+        if channel_info.bank_number < 128 {
+            gm_preset_id = channel_info.patch_number
+        } else {
+            gm_preset_id = 128 << 16
+        }
+
+        preset, found = s.preset_lookup[gm_preset_id]
+        if !found {
+            // No corresponding preset was found. Use the default one...
+            preset = s.default_preset
+        }
+    }
+
+    preset_count := len(preset.regions)
+    for i := 0; i < preset_count; i += 1 {
+        preset_region := &preset.regions[i]
+        if preset_contains(preset_region, key, velocity) {
+            instrument_count := len(preset_region.instrument.regions)
+            for j := 0; j < instrument_count; j += 1 {
+                instrument_region := &preset_region.instrument.regions[j]
+                if instrument_contains(instrument_region, key, velocity) {
+                    region_pair := new_region_pair(preset_region, instrument_region)
+
+                    voice := request_new_voice(&s.voices, instrument_region, channel)
+                    if voice != nil {
+                        start_voice(voice, s.soundfont.wave_data, &region_pair, channel, key, velocity)
+                    }
+                }
+            }
+        }
+    }
+}
+
+note_off_all :: proc(s: ^Synthesizer, immediate: bool) {
+    if immediate {
+        clear_voice_collection(&s.voices)
+    } else {
+        for i := 0; i < s.voices.active_voice_count; i += 1 {
+            end_voice(&s.voices.voices[i])
+        }
+    }
+}
+
+note_off_all_channel :: proc(s: ^Synthesizer, channel: i32, immediate: bool) {
+    if immediate {
+        for i := 0; i < s.voices.active_voice_count; i += 1 {
+            if s.voices.voices[i].channel == channel {
+                kill_voice(&s.voices.voices[i])
+            }
+        }
+    } else {
+        for i := 0; i < s.voices.active_voice_count; i += 1 {
+            if s.voices.voices[i].channel == channel {
+                end_voice(&s.voices.voices[i])
+            }
+        }
+    }
+}
+
+reset_all_controllers :: proc(s: ^Synthesizer) {
+    channel_count := len(s.channels)
+    for i := 0; i < channel_count; i += 1 {
+        channel_reset_all_controllers(&s.channels[i])
+    }
+}
+
+reset_all_controllers_channel :: proc(s: ^Synthesizer, channel: i32) {
+    if !(0 <= channel && int(channel) < len(s.channels)) {
+        return
+    }
+
+    channel_reset_all_controllers(&s.channels[channel])
+}
+
+reset :: proc(s: ^Synthesizer) {
+    clear_voice_collection(&s.voices)
+
+    channel_count := len(s.channels)
+    for i := 0; i < channel_count; i += 1 {
+        channel_reset(&s.channels[i])
+    }
+
+    /*
+    if s.EnableReverbAndChorus {
+        s.reverb.mute()
+        s.chorus.mute()
+    }
+    */
+
+    s.block_read = s.block_size
+}

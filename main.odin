@@ -14,7 +14,7 @@ main :: proc() {
     mem.tracking_allocator_init(&track, context.allocator)
     context.allocator = mem.tracking_allocator(&track)
 
-    file, err1 := os.open("GeneralUser GS MuseScore v1.442.sf2", os.O_RDONLY)
+    file, err1 := os.open("TimGM6mb.sf2", os.O_RDONLY)
     if err1 != os.ERROR_NONE {
         panic("OOPS!")
     }
@@ -26,9 +26,7 @@ main :: proc() {
 
     settings := new_synthesizer_settings(44100)
     synthesizer, err3 := new_synthesizer(&soundfont, &settings)
-    for ch := 0; ch < 16; ch += 1 {
-        fmt.println(synthesizer.channels[ch].is_percussion_channel)
-    }
+    note_on(&synthesizer, 0, 60, 100)
     destroy(&synthesizer)
 
     fmt.println(get_attack_volume_envelope(&soundfont.instruments[0].regions[0]))

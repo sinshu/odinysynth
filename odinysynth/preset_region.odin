@@ -141,6 +141,12 @@ create_preset_regions :: proc(infos: []Preset_Info, all_zones: []Zone, instrumen
     return result, nil
 }
 
+preset_contains :: proc(pr: ^Preset_Region, key: i32, velocity: i32) -> bool {
+    contains_key := preset_get_key_range_start(pr) <= key && key <= preset_get_key_range_end(pr)
+    contains_velocity := preset_get_velocity_range_start(pr) <= velocity && velocity <= preset_get_velocity_range_end(pr)
+    return contains_key && contains_velocity
+}
+
 preset_get_modulation_lfo_to_pitch :: proc(pr: ^Preset_Region) -> i32 {
     return i32(pr.gs[Generator_Type.Modulation_Lfo_To_Pitch])
 }
