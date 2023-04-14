@@ -158,6 +158,7 @@ create_instrument_regions :: proc(infos: []Instrument_Info, all_zones: []Zone, s
     return result, nil
 }
 
+@(private)
 instrument_contains :: proc(ir: ^Instrument_Region, key: i32, velocity: i32) -> bool {
     contains_key := instrument_get_key_range_start(ir) <= key && key <= instrument_get_key_range_end(ir)
     contains_velocity := instrument_get_velocity_range_start(ir) <= velocity && velocity <= instrument_get_velocity_range_end(ir)

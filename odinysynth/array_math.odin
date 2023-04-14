@@ -1,5 +1,6 @@
 package odinysynth
 
+@(private)
 array_multiply_add :: proc(a: f32, x: []f32, destination: []f32) {
     destination_length := len(destination)
     for i := 0; i < destination_length; i += 1 {
@@ -7,6 +8,7 @@ array_multiply_add :: proc(a: f32, x: []f32, destination: []f32) {
     }
 }
 
+@(private)
 array_multiply_add_slope :: proc(a: f32, step: f32, x: []f32, destination: []f32) {
     destination_length := len(destination)
     b := a
