@@ -116,3 +116,41 @@ discard_data :: proc(r: io.Reader, size: int) -> Error {
 
     return nil
 }
+
+@(private)
+read_i32_big_endian :: proc(r: io.Reader) -> (i32, Error) {
+    data1: [4]u8
+    n, err := io.read_full(r, data1[:])
+    if err != nil {
+        return 0, err
+    }
+
+    data2: [4]u8
+    data2[0] = data1[3]
+    data2[1] = data1[2]
+    data2[2] = data1[1]
+    data2[3] = data1[0]
+
+    return transmute(i32)data2, nil
+}
+
+@(private)
+read_read_i32_variable_length :: proc(r: io.Reader) -> (i32, Error) {
+    acc: i32 = 0
+    count := 0
+    for {
+        value, err := io.read_byte(r)
+        if err != nil {
+            return 0, err
+        }
+        acc = (acc << 7) | (i32(value) & 127)
+        if (value & 128) == 0 {
+            break
+        }
+        count += 1
+        if count == 4 {
+            return 0, Odinysynth_Error.Unexpected
+        }
+    }
+    return acc, nil
+}
