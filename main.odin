@@ -111,8 +111,8 @@ main :: proc() {
             btm = min(left[offset + 2], btm)
             btm = min(left[offset + 3], btm)
             x := i32(i)
-            y1 := i32(384 - 300 * top) - 10
-            y2 := i32(384 - 300 * btm) + 10
+            y1 := i32(384 - 300 * top) - 5
+            y2 := i32(384 - 300 * btm) + 5
             rl.DrawRectangle(x, y1, 3, y2 - y1, rl.DARKGRAY)
         }
         
