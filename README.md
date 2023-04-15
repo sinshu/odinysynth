@@ -4,6 +4,16 @@ OdinySynth is a SoundFont MIDI synthesizer written in pure Odin, ported from [Me
 
 
 
+## Demo
+
+This is a demo video to show the synthesizer running on [raylib](https://www.raylib.com/)'s audio stream in real-time.
+
+https://www.youtube.com/watch?v=edil47gQD1o
+
+[![Youtube video](https://img.youtube.com/vi/edil47gQD1o/0.jpg)](https://www.youtube.com/watch?v=edil47gQD1o)
+
+
+
 ## Features
 
 * Suitable for both real-time and offline synthesis.
