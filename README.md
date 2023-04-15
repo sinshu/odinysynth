@@ -98,7 +98,7 @@ render(&sequencer, left[:], right[:])
     - [ ] Chorus
 * __Other things__
     - [x] Standard MIDI file support
-    - [ ] Performace optimization
+    - [x] Performace optimization
 
 
 
