@@ -17,4 +17,5 @@ Odinysynth_Error :: enum {
     Block_Size_Is_Out_Of_Range,
     Maximum_Polyphony_Is_Out_Of_Range,
     Unexpected,
+    File_IO_Error,
 }

@@ -27,9 +27,7 @@ simple_chord :: proc() {
     using odinysynth
 
     // Load the SoundFont.
-    sf2, _ := os.open("TimGM6mb.sf2", os.O_RDONLY)
-    defer os.close(sf2)
-    soundfont, _ := new_soundfont(io.Reader { stream = os.stream_from_handle(sf2) })
+    soundfont, _ := new_soundfont("TimGM6mb.sf2")
     defer destroy(&soundfont)
 
     // Create the synthesizer.
@@ -60,9 +58,7 @@ flourish :: proc() {
     using odinysynth
 
     // Load the SoundFont.
-    sf2, _ := os.open("TimGM6mb.sf2", os.O_RDONLY)
-    defer os.close(sf2)
-    soundfont, _ := new_soundfont(io.Reader { stream = os.stream_from_handle(sf2) })
+    soundfont, _ := new_soundfont("TimGM6mb.sf2")
     defer destroy(&soundfont)
 
     // Create the synthesizer.
@@ -71,9 +67,7 @@ flourish :: proc() {
     defer destroy(&synthesizer)
 
     // Load the MIDI file.
-    mid, _ := os.open("flourish.mid", os.O_RDONLY)
-    defer os.close(mid)
-    midi_file, _ := new_midi_file(io.Reader { stream = os.stream_from_handle(mid) })
+    midi_file, _ := new_midi_file("flourish.mid")
     defer destroy(&midi_file)
 
     // Create the sequencer.
