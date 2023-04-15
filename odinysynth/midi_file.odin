@@ -1,6 +1,7 @@
 package odinysynth
 
 import "core:io"
+import "core:os"
 
 @(private)
 MSG_NORMAL :: 0
@@ -81,7 +82,17 @@ get_tempo :: proc(m: ^Message) -> f64 {
     return 60000000.0 / f64((i32(m.command) << 16) | (i32(m.data1) << 8) | i32(m.data2))
 }
 
-new_midi_file :: proc(r: io.Reader) -> (Midi_File, Error) {
+new_midi_file_from_file :: proc(path: string) -> (Midi_File, Error) {
+    file, err := os.open(path, os.O_RDONLY)
+    if err != 0 {
+        return {}, Odinysynth_Error.File_IO_Error
+    }
+    defer os.close(file)
+
+    return new_midi_file_from_reader(io.Reader { stream = os.stream_from_handle(file) })
+}
+
+new_midi_file_from_reader :: proc(r: io.Reader) -> (Midi_File, Error) {
     message_lists: [MAX_TRACK_COUNT][dynamic]Message = {}
     tick_lists: [MAX_TRACK_COUNT][dynamic]i32 = {}
     err: Error = nil

@@ -1,6 +1,7 @@
 package odinysynth
 
 import "core:io"
+import "core:os"
 
 Soundfont :: struct {
     wave_data: []i16,
@@ -11,7 +12,17 @@ Soundfont :: struct {
     instrument_regions: []Instrument_Region,
 }
 
-new_soundfont :: proc(r: io.Reader) -> (Soundfont, Error) {
+new_soundfont_from_file :: proc(path: string) -> (Soundfont, Error) {
+    file, err := os.open(path, os.O_RDONLY)
+    if err != 0 {
+        return {}, Odinysynth_Error.File_IO_Error
+    }
+    defer os.close(file)
+
+    return new_soundfont_from_reader(io.Reader { stream = os.stream_from_handle(file) })
+}
+
+new_soundfont_from_reader :: proc(r: io.Reader) -> (Soundfont, Error) {
     wave_data: []i16 = nil
     sample_headers: []Sample_Header = nil
     presets: []Preset = nil

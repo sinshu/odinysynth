@@ -2,6 +2,8 @@ package odinysynth
 
 destroy :: proc{destroy_soundfont, destroy_synthesizer, destroy_midi_file}
 render :: proc{synthesizer_render, sequencer_render}
+new_soundfont :: proc{new_soundfont_from_file, new_soundfont_from_reader}
+new_midi_file :: proc{new_midi_file_from_file, new_midi_file_from_reader}
 
 get_sample_start :: proc{instrument_get_sample_start}
 get_sample_end :: proc{instrument_get_sample_end}
