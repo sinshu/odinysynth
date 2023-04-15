@@ -4,6 +4,14 @@ OdinySynth is a SoundFont MIDI synthesizer written in pure Odin, ported from [Me
 
 
 
+## Features
+
+* Suitable for both real-time and offline synthesis.
+* Support for standard MIDI files.
+* No dependencies other than the standard library.
+
+
+
 ## Examples
 
 An example code to synthesize a simple chord:
