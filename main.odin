@@ -4,6 +4,7 @@ import "core:fmt"
 import "core:io"
 import "core:mem"
 import "core:os"
+import "core:strings"
 import "core:testing"
 import rl "vendor:raylib"
 import "odinysynth"
@@ -37,7 +38,7 @@ main :: proc() {
     // Play the MIDI file.
     play(&sequencer, &midi_file, false)
 
-    rl.InitWindow(800, 600, "MIDI file playback")
+    rl.InitWindow(1024, 768, "MIDI file playback")
 
     rl.InitAudioDevice()
     rl.SetAudioStreamBufferSizeDefault(buffer_size)
@@ -54,7 +55,26 @@ main :: proc() {
 
     rl.SetTargetFPS(60)
 
+    speed := 100
+
     for !rl.WindowShouldClose() {
+        if rl.IsKeyPressed(rl.KeyboardKey.UP) {
+            speed += 10
+        }
+        if rl.IsKeyPressed(rl.KeyboardKey.DOWN) {
+            speed -= 10
+        }
+        if speed < 0 {
+            speed = 0
+        }
+        if speed > 1000 {
+            speed = 1000
+        }
+
+        speed_f64 := f64(speed) / 100
+
+        sequencer.speed = speed_f64
+
         if rl.IsAudioStreamProcessed(stream) {
             render(&sequencer, left[:], right[:])
             for i := 0; i < buffer_size; i += 1 {
@@ -77,7 +97,29 @@ main :: proc() {
         }
 
         rl.BeginDrawing()
-        rl.ClearBackground(rl.PINK)
+        rl.ClearBackground(rl.LIGHTGRAY)
+
+        rl.DrawText("MIDI music playback with Odin + raylib!", 20, 20, 50, rl.DARKGRAY)
+        str := fmt.ctprintf("%.1f", speed_f64)
+        rl.DrawText("Playback speed:", 20, 700, 50, rl.Color{r=128,a=255})
+        rl.DrawText(str, 460, 670, 90, rl.Color{r=128,a=255})
+
+        for i := 0; i < buffer_size / 4; i += 1 {
+            offset := 4 * i
+            top := left[offset]
+            top = max(left[offset + 1], top)
+            top = max(left[offset + 2], top)
+            top = max(left[offset + 3], top)
+            btm := left[offset]
+            btm = min(left[offset + 1], btm)
+            btm = min(left[offset + 2], btm)
+            btm = min(left[offset + 3], btm)
+            x := i32(i)
+            y1 := i32(384 - 300 * top) - 10
+            y2 := i32(384 - 300 * btm) + 10
+            rl.DrawRectangle(x, y1, 3, y2 - y1, rl.DARKGRAY)
+        }
+        
         rl.EndDrawing()
     }
 

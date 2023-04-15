@@ -10,11 +10,14 @@ Midi_File_Sequencer :: struct {
 
     current_time: f64,
     msg_index: int,
+
+    speed: f64
 }
 
 new_midi_file_sequencer :: proc(synthesizer: ^Synthesizer) -> Midi_File_Sequencer {
     result: Midi_File_Sequencer = {}
     result.synthesizer = synthesizer
+    result.speed = 1
     return result
 }
 
@@ -42,7 +45,7 @@ sequencer_render :: proc(seq: ^Midi_File_Sequencer, left: []f32, right: []f32) {
         if seq.block_wrote == seq.synthesizer.block_size {
             process_events(seq)
             seq.block_wrote = 0
-            seq.current_time += f64(seq.synthesizer.block_size) / f64(seq.synthesizer.sample_rate)
+            seq.current_time += seq.speed * f64(seq.synthesizer.block_size) / f64(seq.synthesizer.sample_rate)
         }
 
         src_rem := seq.synthesizer.block_size - seq.block_wrote
