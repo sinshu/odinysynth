@@ -19,7 +19,7 @@ new_soundfont_from_file :: proc(path: string) -> (Soundfont, Error) {
     }
     defer os.close(file)
 
-    return new_soundfont_from_reader(io.Reader { stream = os.stream_from_handle(file) })
+    return new_soundfont_from_reader(os.stream_from_handle(file))
 }
 
 new_soundfont_from_reader :: proc(r: io.Reader) -> (Soundfont, Error) {

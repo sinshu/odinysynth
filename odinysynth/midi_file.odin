@@ -24,8 +24,8 @@ Message :: struct {
 }
 
 Midi_File :: struct {
-    messages: [dynamic]Message
-    times: [dynamic]f64
+    messages: [dynamic]Message,
+    times: [dynamic]f64,
 }
 
 @(private)
@@ -89,7 +89,7 @@ new_midi_file_from_file :: proc(path: string) -> (Midi_File, Error) {
     }
     defer os.close(file)
 
-    return new_midi_file_from_reader(io.Reader { stream = os.stream_from_handle(file) })
+    return new_midi_file_from_reader(os.stream_from_handle(file))
 }
 
 new_midi_file_from_reader :: proc(r: io.Reader) -> (Midi_File, Error) {

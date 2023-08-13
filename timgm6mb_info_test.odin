@@ -13,7 +13,7 @@ timgm6mb_info_test :: proc(t: ^testing.T) {
     }
     defer os.close(file)
 
-    reader := io.Reader { stream = os.stream_from_handle(file) }
+    reader := os.stream_from_handle(file)
 
     sf, err2 := odinysynth.new_soundfont(reader)
     if err2 != nil {

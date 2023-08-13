@@ -5,8 +5,8 @@ import "core:mem"
 
 @(private)
 Soundfont_Sample_Data :: struct {
-    bits_per_sample: i32
-    samples: []i16
+    bits_per_sample: i32,
+    samples: []i16,
 }
 
 @(private)
